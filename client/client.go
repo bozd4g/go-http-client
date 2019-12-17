@@ -26,18 +26,18 @@ func (h HttpClient) Get(endpoint string) ServiceResponse {
 
 func parseResponse(response http.Response, responseErr error) ServiceResponse {
 	if responseErr != nil {
-		return ServiceResponse { StatusCode:500, Message: responseErr.Error(), Data: nil}
+		return errorResponse(responseErr.Error())
 	}
 
 	body, bodyErr := ioutil.ReadAll(response.Body)
 	if bodyErr != nil {
-		return ServiceResponse { StatusCode:500, Message: bodyErr.Error(), Data: nil}
+		return errorResponse(bodyErr.Error())
 	}
 
 	var responseModel interface {}
-	error := json.Unmarshal([]byte(body), &responseModel)
-	if error != nil {
-		return ServiceResponse { StatusCode:500, Message: error.Error(), Data: nil}
+	unmarshalErr := json.Unmarshal([]byte(body), &responseModel)
+	if unmarshalErr != nil {
+		return errorResponse(unmarshalErr.Error())
 	}
 
 	return ServiceResponse{
@@ -45,4 +45,8 @@ func parseResponse(response http.Response, responseErr error) ServiceResponse {
 		Message:    "Success",
 		Data:       responseModel,
 	}
+}
+
+func errorResponse(message string) ServiceResponse {
+	return ServiceResponse { StatusCode: 400, Message: message, Data: nil}
 }
