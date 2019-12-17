@@ -3,6 +3,7 @@ package client
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/google/go-querystring/query"
 	"io/ioutil"
 	"net/http"
 )
@@ -18,13 +19,22 @@ type ServiceResponse struct {
 }
 
 func (h HttpClient) Get(endpoint string) ServiceResponse {
-	response, responseErr := http.Get(fmt.Sprintf("%s%s", h.BaseUrl, endpoint, ))
-	defer response.Body.Close()
+	response, responseErr := http.Get(fmt.Sprintf("%s%s", h.BaseUrl, endpoint))
 
 	return parseResponse(*response, responseErr)
 }
 
+func (h HttpClient) GetWithParameters(endpoint string, params interface{}) ServiceResponse {
+	queryString, _ := query.Values(params)
+	response, responseErr := http.Get(fmt.Sprintf("%s%s?%s", h.BaseUrl, endpoint, queryString))
+
+	return parseResponse(*response, responseErr)
+}
+
+
 func parseResponse(response http.Response, responseErr error) ServiceResponse {
+	defer response.Body.Close()
+	
 	if responseErr != nil {
 		return errorResponse(responseErr.Error())
 	}
