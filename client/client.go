@@ -21,7 +21,7 @@ type ServiceResponse struct {
 
 func (h HttpClient) Get(endpoint string) ServiceResponse {
 	json, _ := json.Marshal(map[string] string{})
-	request, requestErr := http.NewRequest(http.MethodPost, fmt.Sprintf("%s%s", h.BaseUrl, endpoint), bytes.NewBuffer(json))
+	request, requestErr := http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s", h.BaseUrl, endpoint), bytes.NewBuffer(json))
 
 	return parseResponse(request, requestErr)
 }
@@ -29,7 +29,7 @@ func (h HttpClient) Get(endpoint string) ServiceResponse {
 func (h HttpClient) GetWithParameters(endpoint string, params interface{}) ServiceResponse {
 	json, _ := json.Marshal(map[string] string{})
 	queryString, _ := query.Values(params)
-	request, requestErr := http.NewRequest(http.MethodPost, fmt.Sprintf("%s%s?%s", h.BaseUrl, endpoint, queryString), bytes.NewBuffer(json))
+	request, requestErr := http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s?%s", h.BaseUrl, endpoint, queryString), bytes.NewBuffer(json))
 
 	return parseResponse(request, requestErr)
 }
@@ -77,6 +77,8 @@ func (h HttpClient) DeleteWithParameters(endpoint string, params interface{}) Se
 }
 
 func parseResponse(request *http.Request, requestErr error) ServiceResponse {
+	request.Header.Add("Content-Type", "application/json")
+
 	client := &http.Client{}
 	response, responseErr := client.Do(request)
 
@@ -91,7 +93,7 @@ func parseResponse(request *http.Request, requestErr error) ServiceResponse {
 		return errorResponse(bodyErr.Error())
 	}
 
-	var responseModel struct {}
+	var responseModel interface {}
 	unmarshalErr := json.Unmarshal([]byte(body), &responseModel)
 	if unmarshalErr != nil {
 		return errorResponse(unmarshalErr.Error())
