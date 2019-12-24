@@ -1,6 +1,7 @@
 package client
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/google/go-querystring/query"
@@ -19,20 +20,66 @@ type ServiceResponse struct {
 }
 
 func (h HttpClient) Get(endpoint string) ServiceResponse {
-	response, responseErr := http.Get(fmt.Sprintf("%s%s", h.BaseUrl, endpoint))
+	js, _ := json.Marshal(map[string] string{})
+	request, requestErr := http.NewRequest(http.MethodPost, fmt.Sprintf("%s%s", h.BaseUrl, endpoint), bytes.NewBuffer(js))
 
-	return parseResponse(*response, responseErr)
+	return parseResponse(request, requestErr)
 }
 
 func (h HttpClient) GetWithParameters(endpoint string, params interface{}) ServiceResponse {
+	js, _ := json.Marshal(map[string] string{})
 	queryString, _ := query.Values(params)
-	response, responseErr := http.Get(fmt.Sprintf("%s%s?%s", h.BaseUrl, endpoint, queryString))
+	request, requestErr := http.NewRequest(http.MethodPost, fmt.Sprintf("%s%s?%s", h.BaseUrl, endpoint, queryString), bytes.NewBuffer(js))
 
-	return parseResponse(*response, responseErr)
+	return parseResponse(request, requestErr)
 }
 
+func (h HttpClient) Post(endpoint string) ServiceResponse {
+	js, _ := json.Marshal(map[string] string{})
+	request, requestErr  := http.NewRequest(http.MethodPost, h.BaseUrl + endpoint, bytes.NewBuffer(js))
 
-func parseResponse(response http.Response, responseErr error) ServiceResponse {
+	return parseResponse(request, requestErr)
+}
+
+func (h HttpClient) PostWithParameters(endpoint string, params interface{}) ServiceResponse {
+	js, _ := json.Marshal(params)
+	request, requestErr  := http.NewRequest(http.MethodPost, h.BaseUrl + endpoint, bytes.NewBuffer(js))
+
+	return parseResponse(request, requestErr)
+}
+
+func (h HttpClient) Put(endpoint string) ServiceResponse {
+	js, _ := json.Marshal(map[string] string{})
+	request, requestErr := http.NewRequest(http.MethodPut, h.BaseUrl + endpoint, bytes.NewBuffer(js))
+
+	return parseResponse(request, requestErr)
+}
+
+func (h HttpClient) PutWithParameters(endpoint string, params interface{}) ServiceResponse {
+	js, _ := json.Marshal(params)
+	request, requestErr := http.NewRequest(http.MethodPut, h.BaseUrl + endpoint, bytes.NewBuffer(js))
+
+	return parseResponse(request, requestErr)
+}
+
+func (h HttpClient) Delete(endpoint string) ServiceResponse {
+	js, _ := json.Marshal(map[string] string{})
+	request, requestErr := http.NewRequest(http.MethodDelete, h.BaseUrl + endpoint, bytes.NewBuffer(js))
+
+	return parseResponse(request, requestErr)
+}
+
+func (h HttpClient) DeleteWithParameters(endpoint string, params interface{}) ServiceResponse {
+	js, _ := json.Marshal(params)
+	request, requestErr := http.NewRequest(http.MethodDelete, h.BaseUrl + endpoint, bytes.NewBuffer(js))
+
+	return parseResponse(request, requestErr)
+}
+
+func parseResponse(request *http.Request, requestErr error) ServiceResponse {
+	client := &http.Client{}
+	response, responseErr := client.Do(request)
+
 	defer response.Body.Close()
 	
 	if responseErr != nil {
@@ -44,7 +91,7 @@ func parseResponse(response http.Response, responseErr error) ServiceResponse {
 		return errorResponse(bodyErr.Error())
 	}
 
-	var responseModel interface {}
+	var responseModel struct {}
 	unmarshalErr := json.Unmarshal([]byte(body), &responseModel)
 	if unmarshalErr != nil {
 		return errorResponse(unmarshalErr.Error())
@@ -56,6 +103,7 @@ func parseResponse(response http.Response, responseErr error) ServiceResponse {
 		Data:       responseModel,
 	}
 }
+
 
 func errorResponse(message string) ServiceResponse {
 	return ServiceResponse { StatusCode: 400, Message: message, Data: nil}
