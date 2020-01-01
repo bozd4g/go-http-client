@@ -85,12 +85,11 @@ func parseResponse(request *http.Request, requestErr error) ServiceResponse {
 
 	client := &http.Client{}
 	response, responseErr := client.Do(request)
-
-	defer response.Body.Close()
-	
 	if responseErr != nil {
 		return errorResponse(responseErr.Error())
 	}
+
+	defer response.Body.Close()
 
 	body, bodyErr := ioutil.ReadAll(response.Body)
 	fmt.Println(string(body))
