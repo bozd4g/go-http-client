@@ -66,6 +66,7 @@ func main() {
 All functions return a type called ServiceResponse as below.
 ```go
 type ServiceResponse struct {
+	IsSuccess bool
 	StatusCode int
 	Message string
 	Data interface {}
