@@ -14,6 +14,7 @@ type HttpClient struct {
 }
 
 type ServiceResponse struct {
+	IsSuccess bool
 	StatusCode int
 	Message string
 	Data interface {}
@@ -104,6 +105,7 @@ func parseResponse(request *http.Request, requestErr error) ServiceResponse {
 	}
 
 	return ServiceResponse{
+		IsSuccess: true,
 		StatusCode: response.StatusCode,
 		Data:       responseModel,
 		Message:    "Success",
@@ -111,5 +113,5 @@ func parseResponse(request *http.Request, requestErr error) ServiceResponse {
 }
 
 func errorResponse(message string) ServiceResponse {
-	return ServiceResponse { StatusCode: 400, Message: message, Data: nil}
+	return ServiceResponse { IsSuccess: false, StatusCode: 400, Message: message, Data: nil}
 }
