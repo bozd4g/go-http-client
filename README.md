@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <a href="https://golang.org/">Play on Playground 🔗</a>
+  <a href="https://play.golang.org/p/Dio1MpP4CvA">Play on Playground 🔗</a>
 </p>
 
 <p align="center">
