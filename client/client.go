@@ -77,6 +77,10 @@ func (h HttpClient) DeleteWithParameters(endpoint string, params interface{}) Se
 }
 
 func parseResponse(request *http.Request, requestErr error) ServiceResponse {
+	if requestErr != nil {
+		return errorResponse(requestErr.Error())
+	}
+
 	request.Header.Add("Content-Type", "application/json")
 
 	client := &http.Client{}
@@ -89,23 +93,23 @@ func parseResponse(request *http.Request, requestErr error) ServiceResponse {
 	}
 
 	body, bodyErr := ioutil.ReadAll(response.Body)
+	fmt.Println(string(body))
 	if bodyErr != nil {
 		return errorResponse(bodyErr.Error())
 	}
 
 	var responseModel interface {}
-	unmarshalErr := json.Unmarshal([]byte(body), &responseModel)
+	unmarshalErr := json.Unmarshal([]byte(string(body)), &responseModel)
 	if unmarshalErr != nil {
 		return errorResponse(unmarshalErr.Error())
 	}
 
 	return ServiceResponse{
 		StatusCode: response.StatusCode,
-		Message:    "Success",
 		Data:       responseModel,
+		Message:    "Success",
 	}
 }
-
 
 func errorResponse(message string) ServiceResponse {
 	return ServiceResponse { StatusCode: 400, Message: message, Data: nil}
