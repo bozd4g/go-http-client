@@ -72,6 +72,7 @@ All functions return a type called ServiceResponse as below.
 type ServiceResponse struct {
 	IsSuccess bool
 	StatusCode int
+	StatusText string
 	Message string
 	Data interface {}
 }
@@ -80,7 +81,7 @@ type ServiceResponse struct {
 You can call these functions from your application.
 
 | Function                                                  | Has Params |
-|-----------------------------------------------------------|------------|
+| --------------------------------------------------------- | ---------- |
 | Get(endpoint string)                                      | -          |
 | GetWithParameters(endpoint string, params interface {})   | Yes        |
 | Post(endpoint string)                                     | -          |
@@ -91,7 +92,7 @@ You can call these functions from your application.
 | DeleteWithParameters(endpoint string, params interface{}) | Yes        |
 
 # License
-Copyright (c) 2019 Furkan Bozdag
+Copyright (c) 2020 Furkan Bozdag
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
