@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <a href="https://golang.org/">Play on Playground 🔗</a>
+  <a href="https://godoc.org/github.com/bozd4g/go-http-client/client" target="_blank">Documentation on GoDoc 🔗</a>
 </p>
 
 <p align="center">
@@ -38,15 +38,14 @@ import (
 )
 
 type Todo struct {
-	Id int
-	UserId int
-	Title string
+	Id        int
+	UserId    int
+	Title     string
 	Completed bool
 }
 
-
 func main() {
-	client := client.HttpClient{ BaseUrl: "http://jsonplaceholder.typicode.com"}
+	client := client.HttpClient{BaseUrl: "http://jsonplaceholder.typicode.com"}
 	response := client.PostWithParameters("/posts", Todo{
 		Id:        1,
 		UserId:    1,
@@ -54,11 +53,16 @@ func main() {
 		Completed: true,
 	})
 
-	var todo Todo
-	mapstructure.Decode(response.Data, &todo)
+	if response.IsSuccess {
+		var todo Todo
+		mapstructure.Decode(response.Data, &todo)
+		fmt.Println(todo.Title) // Lorem ipsum dolor sit amet
 
-	fmt.Println(todo.Title) // Lorem ipsum dolor sit amet
+	} else {
+		fmt.Println(response.Message)
+	}
 }
+
 ```
 
 ## Functions
