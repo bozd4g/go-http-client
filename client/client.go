@@ -119,5 +119,6 @@ func errorResponse(message string) ServiceResponse {
 		IsSuccess: false,
 		StatusCode: http.StatusBadRequest,
 		StatusText: http.StatusText(http.StatusBadRequest),
-		Message: message, Data: nil}
+		Message: message,
+		Data: nil}
 }
