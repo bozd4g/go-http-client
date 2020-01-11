@@ -1,0 +1,10 @@
+language: go
+
+go:
+  - 1.x
+  - master
+
+install: true
+
+notifications:
+  email: true
