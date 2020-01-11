@@ -9,10 +9,12 @@ import (
 	"net/http"
 )
 
+// The class object as below
 type HttpClient struct {
 	BaseUrl string
 }
 
+// The response type of service requests
 type ServiceResponse struct {
 	IsSuccess bool
 	StatusCode int
@@ -21,6 +23,7 @@ type ServiceResponse struct {
 	Data interface {}
 }
 
+// It returns your GET response with your data
 func (h HttpClient) Get(endpoint string) ServiceResponse {
 	json, _ := json.Marshal(map[string] string{})
 	request, requestErr := http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s", h.BaseUrl, endpoint), bytes.NewBuffer(json))
@@ -28,6 +31,7 @@ func (h HttpClient) Get(endpoint string) ServiceResponse {
 	return parseResponse(request, requestErr)
 }
 
+// It returns your GET response with your data
 func (h HttpClient) GetWithParameters(endpoint string, params interface{}) ServiceResponse {
 	json, _ := json.Marshal(map[string] string{})
 	queryString, _ := query.Values(params)
@@ -36,6 +40,7 @@ func (h HttpClient) GetWithParameters(endpoint string, params interface{}) Servi
 	return parseResponse(request, requestErr)
 }
 
+// It returns your POST response with your data
 func (h HttpClient) Post(endpoint string) ServiceResponse {
 	json, _ := json.Marshal(map[string] string{})
 	request, requestErr  := http.NewRequest(http.MethodPost, h.BaseUrl + endpoint, bytes.NewBuffer(json))
@@ -43,6 +48,7 @@ func (h HttpClient) Post(endpoint string) ServiceResponse {
 	return parseResponse(request, requestErr)
 }
 
+// It returns your POST response with your data
 func (h HttpClient) PostWithParameters(endpoint string, params interface{}) ServiceResponse {
 	json, _ := json.Marshal(params)
 	request, requestErr  := http.NewRequest(http.MethodPost, h.BaseUrl + endpoint, bytes.NewBuffer(json))
@@ -50,6 +56,7 @@ func (h HttpClient) PostWithParameters(endpoint string, params interface{}) Serv
 	return parseResponse(request, requestErr)
 }
 
+// It returns your PUT response with your data
 func (h HttpClient) Put(endpoint string) ServiceResponse {
 	json, _ := json.Marshal(map[string] string{})
 	request, requestErr := http.NewRequest(http.MethodPut, h.BaseUrl + endpoint, bytes.NewBuffer(json))
@@ -57,6 +64,7 @@ func (h HttpClient) Put(endpoint string) ServiceResponse {
 	return parseResponse(request, requestErr)
 }
 
+// It returns your POST response with your data
 func (h HttpClient) PutWithParameters(endpoint string, params interface{}) ServiceResponse {
 	json, _ := json.Marshal(params)
 	request, requestErr := http.NewRequest(http.MethodPut, h.BaseUrl + endpoint, bytes.NewBuffer(json))
@@ -64,6 +72,7 @@ func (h HttpClient) PutWithParameters(endpoint string, params interface{}) Servi
 	return parseResponse(request, requestErr)
 }
 
+// It returns your DELETE response with your data
 func (h HttpClient) Delete(endpoint string) ServiceResponse {
 	json, _ := json.Marshal(map[string] string{})
 	request, requestErr := http.NewRequest(http.MethodDelete, h.BaseUrl + endpoint, bytes.NewBuffer(json))
@@ -71,6 +80,7 @@ func (h HttpClient) Delete(endpoint string) ServiceResponse {
 	return parseResponse(request, requestErr)
 }
 
+// It returns your DELETE response with your data
 func (h HttpClient) DeleteWithParameters(endpoint string, params interface{}) ServiceResponse {
 	json, _ := json.Marshal(params)
 	request, requestErr := http.NewRequest(http.MethodDelete, h.BaseUrl + endpoint, bytes.NewBuffer(json))
