@@ -11,3 +11,6 @@ notifications:
   email: true
 
 os: osx
+
+script:
+  - go test client_test.go -v
