@@ -6,6 +6,7 @@ go:
 
 install:
   - go get -t -v github.com/google/go-querystring/query
+  - go get -t -v github.com/mitchellh/mapstructure
 
 notifications:
   email: true
