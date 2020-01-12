@@ -17,7 +17,7 @@ func TestGetRequest (t *testing.T) {
 	client := client.HttpClient { BaseUrl: "https://go-http-client.free.beeceptor.com" }
 	response := client.Get("/posts")
 
-	t.Run("Returns a todo who have id as 1", func(t *testing.T) {
+	t.Run("Returns a todo who have id as 101", func(t *testing.T) {
 		var got Todo
 		mapstructure.Decode(response.Data, &got)
 		want := 101
@@ -34,7 +34,7 @@ func TestPostRequest (t *testing.T) {
 		Id: 1,
 	})
 
-	t.Run("Returns a todo who have id as 101", func(t *testing.T) {
+	t.Run("Returns a todo who have id as 201", func(t *testing.T) {
 		var got Todo
 		mapstructure.Decode(response.Data, &got)
 		want := 201
@@ -51,7 +51,7 @@ func TestPutRequest (t *testing.T) {
 		Id: 1,
 	})
 
-	t.Run("Returns a todo who have id as 101", func(t *testing.T) {
+	t.Run("Returns a todo who have id as 301", func(t *testing.T) {
 		var got Todo
 		mapstructure.Decode(response.Data, &got)
 		want := 301
@@ -68,7 +68,7 @@ func TestDeleteRequest (t *testing.T) {
 		Id: 1,
 	})
 
-	t.Run("Returns a todo who have id as 101", func(t *testing.T) {
+	t.Run("Returns a todo who have id as 401", func(t *testing.T) {
 		var got Todo
 		mapstructure.Decode(response.Data, &got)
 		want := 401
