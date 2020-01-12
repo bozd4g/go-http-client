@@ -4,7 +4,10 @@ go:
   - 1.x
   - master
 
-install: true
+install:
+  - go get -t -v github.com/google/go-querystring/query
 
 notifications:
   email: true
+
+os: osx
