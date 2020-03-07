@@ -1,7 +1,6 @@
 language: go
 
 go:
-  - 1.x
   - master
 
 install:
@@ -14,7 +13,8 @@ notifications:
 os: osx
 
 script:
-  - go test *_test.go -race -coverprofile=coverage.txt -covermode=atomic ./...
+  - go test -c -coverpkg=. -o gohttpclient *_test.go
+  - ./gohttpclient -test.coverprofile=/tmp/profile
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

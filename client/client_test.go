@@ -14,13 +14,13 @@ type Todo struct {
 }
 
 func TestGetRequest (t *testing.T) {
-	client := client.HttpClient { BaseUrl: "https://go-http-client.free.beeceptor.com" }
-	response := client.Get("/posts")
+	client := client.HttpClient { BaseUrl: "https://jsonplaceholder.typicode.com/" }
+	response := client.Get("posts/10")
 
-	t.Run("Returns a todo who have id as 101", func(t *testing.T) {
+	t.Run("Returns a todo who have id as 10", func(t *testing.T) {
 		var got Todo
 		mapstructure.Decode(response.Data, &got)
-		want := 101
+		want := 10
 
 		if got.Id != want {
 			t.Errorf("Unexpected data. Got: %d, expected: %d", got.Id, want)
@@ -29,15 +29,15 @@ func TestGetRequest (t *testing.T) {
 }
 
 func TestPostRequest (t *testing.T) {
-	client := client.HttpClient { BaseUrl: "https://go-http-client.free.beeceptor.com" }
-	response := client.PostWithParameters("/posts", Todo{
-		Id: 1,
+	client := client.HttpClient { BaseUrl: "https://jsonplaceholder.typicode.com/" }
+	response := client.PostWithParameters("posts", Todo{
+		Id: 20,
 	})
 
-	t.Run("Returns a todo who have id as 201", func(t *testing.T) {
+	t.Run("Returns a todo who have id as 20", func(t *testing.T) {
 		var got Todo
 		mapstructure.Decode(response.Data, &got)
-		want := 201
+		want := 20
 
 		if got.Id != want {
 			t.Errorf("Unexpected data. Got: %d, expected: %d", got.Id, want)
@@ -46,15 +46,15 @@ func TestPostRequest (t *testing.T) {
 }
 
 func TestPutRequest (t *testing.T) {
-	client := client.HttpClient { BaseUrl: "https://go-http-client.free.beeceptor.com" }
-	response := client.PutWithParameters("/posts", Todo{
-		Id: 1,
+	client := client.HttpClient { BaseUrl: "https://jsonplaceholder.typicode.com/" }
+	response := client.PutWithParameters("posts/30", Todo{
+		Id: 30,
 	})
 
-	t.Run("Returns a todo who have id as 301", func(t *testing.T) {
+	t.Run("Returns a todo who have id as 30", func(t *testing.T) {
 		var got Todo
 		mapstructure.Decode(response.Data, &got)
-		want := 301
+		want := 30
 
 		if got.Id != want {
 			t.Errorf("Unexpected data. Got: %d, expected: %d", got.Id, want)
@@ -63,18 +63,13 @@ func TestPutRequest (t *testing.T) {
 }
 
 func TestDeleteRequest (t *testing.T) {
-	client := client.HttpClient { BaseUrl: "https://go-http-client.free.beeceptor.com" }
-	response := client.DeleteWithParameters("/posts", Todo{
-		Id: 1,
-	})
+	client := client.HttpClient { BaseUrl: "https://jsonplaceholder.typicode.com/" }
+	response := client.Delete("posts/40")
 
-	t.Run("Returns a todo who have id as 401", func(t *testing.T) {
-		var got Todo
-		mapstructure.Decode(response.Data, &got)
-		want := 401
+	t.Run("Returns a todo who have id as 40", func(t *testing.T) {
 
-		if got.Id != want {
-			t.Errorf("Unexpected data. Got: %d, expected: %d", got.Id, want)
+		if response.IsSuccess == false {
+			t.Errorf("Unexpected data. Got: %t, expected: %t", false, true)
 		}
 	})
 }
