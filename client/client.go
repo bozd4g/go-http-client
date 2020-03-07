@@ -35,7 +35,8 @@ func (h HttpClient) Get(endpoint string) ServiceResponse {
 func (h HttpClient) GetWithParameters(endpoint string, params interface{}) ServiceResponse {
 	json, _ := json.Marshal(map[string] string{})
 	queryString, _ := query.Values(params)
-	request, requestErr := http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s?%s", h.BaseUrl, endpoint, queryString), bytes.NewBuffer(json))
+
+	request, requestErr := http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s?%s", h.BaseUrl, endpoint, queryString.Encode()), bytes.NewBuffer(json))
 
 	return parseResponse(request, requestErr)
 }
@@ -104,7 +105,6 @@ func parseResponse(request *http.Request, requestErr error) ServiceResponse {
 	defer response.Body.Close()
 
 	body, bodyErr := ioutil.ReadAll(response.Body)
-	fmt.Println(string(body))
 	if bodyErr != nil {
 		return errorResponse(bodyErr.Error())
 	}
