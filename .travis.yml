@@ -14,4 +14,7 @@ notifications:
 os: osx
 
 script:
-  - go test client/client_test.go -v
+  - go test *_test.go -race -coverprofile=coverage.txt -covermode=atomic ./...
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
