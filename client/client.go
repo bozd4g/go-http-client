@@ -17,10 +17,26 @@ type HttpClient struct {
 // The response type of service requests
 type ServiceResponse struct {
 	IsSuccess  bool
-	StatusCode int
+	StatusCode ResponseType
 	StatusText string
 	Message    string
 	Data       interface{}
+}
+
+type ResponseType int
+
+const (
+	Success       ResponseType = 0
+	InternalError ResponseType = 1
+	ServerError   ResponseType = 2
+)
+
+func (r ResponseType) Text() string {
+	if r == InternalError {
+		return "Request Error"
+	}
+
+	return "Server Error"
 }
 
 // It returns your GET response with your data
@@ -89,46 +105,50 @@ func (h HttpClient) DeleteWithParameters(endpoint string, params interface{}) Se
 	return parseResponse(request, requestErr)
 }
 
+// It returns a ServiceResponse while checking errors
 func parseResponse(request *http.Request, requestErr error) ServiceResponse {
 	if requestErr != nil {
-		return errorResponse(requestErr.Error())
+		return errorResponse(requestErr.Error(), Error)
 	}
 
 	request.Header.Add("Content-Type", "application/json")
 
 	client := &http.Client{}
 	response, responseErr := client.Do(request)
-	if responseErr != nil {
-		return errorResponse(responseErr.Error())
+
+	if responseErr != nil && response != nil {
+		return errorResponse(responseErr.Error(), ServerError)
+	} else if responseErr != nil {
+		return errorResponse(responseErr.Error(), Error)
 	}
 
 	defer response.Body.Close()
 
 	body, bodyErr := ioutil.ReadAll(response.Body)
 	if bodyErr != nil {
-		return errorResponse(bodyErr.Error())
+		return errorResponse(bodyErr.Error(), InternalError)
 	}
 
 	var responseModel interface{}
 	unmarshalErr := json.Unmarshal([]byte(string(body)), &responseModel)
 	if unmarshalErr != nil {
-		return errorResponse(unmarshalErr.Error())
+		return errorResponse(unmarshalErr.Error(), InternalError)
 	}
 
 	return ServiceResponse{
 		IsSuccess:  true,
-		StatusCode: response.StatusCode,
+		StatusCode: Success,
 		StatusText: http.StatusText(response.StatusCode),
 		Data:       responseModel,
 		Message:    "Success",
 	}
 }
 
-func errorResponse(message string) ServiceResponse {
+func errorResponse(message string, statusCode ResponseType) ServiceResponse {
 	return ServiceResponse{
 		IsSuccess:  false,
-		StatusCode: http.StatusBadRequest,
-		StatusText: http.StatusText(http.StatusBadRequest),
+		StatusCode: statusCode,
+		StatusText: statusCode.Text(),
 		Message:    message,
 		Data:       nil}
 }
