@@ -25,13 +25,14 @@ type ServiceResponse struct {
 
 // ResponseType is a enum who has Success, InternalError and ServerError properties
 type ResponseType int
+
 const (
 	// Success says the request is completed successfully
-	Success       ResponseType = 0
+	Success ResponseType = 0
 	// InternalError says the request is completed with internal errors
 	InternalError ResponseType = 1
 	// ServerError says the request is completed with server errors
-	ServerError   ResponseType = 2
+	ServerError ResponseType = 2
 )
 
 // Text func returns a string of ResponseType
