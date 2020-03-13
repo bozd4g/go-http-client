@@ -9,12 +9,12 @@ import (
 	"net/http"
 )
 
-// The HttpClient is a struct who has BaseUrl property
+// HttpClient is a struct who has BaseUrl property
 type HttpClient struct {
 	BaseUrl string
 }
 
-// The ServiceResponse is a struct who has IsSuccess, StatusCode and their text, Message and Data properties
+// ServiceResponse is a struct who has IsSuccess, StatusCode and their text, Message and Data properties
 type ServiceResponse struct {
 	IsSuccess  bool
 	StatusCode ResponseType
@@ -23,15 +23,16 @@ type ServiceResponse struct {
 	Data       interface{}
 }
 
-// The ResponseType is a enum who has Success, InternalError and ServerError properties
+// ResponseType is a enum who has Success, InternalError and ServerError properties
 type ResponseType int
 const (
+	// Success says the request is completed successfully
 	Success       ResponseType = 0
 	InternalError ResponseType = 1
 	ServerError   ResponseType = 2
 )
 
-// The Text func returns a string of ResponseType
+// Text func returns a string of ResponseType
 func (r ResponseType) Text() string {
 	if r == InternalError {
 		return "Request Error"
