@@ -28,7 +28,9 @@ type ResponseType int
 const (
 	// Success says the request is completed successfully
 	Success       ResponseType = 0
+	// InternalError says the request is completed with internal errors
 	InternalError ResponseType = 1
+	// ServerError says the request is completed with server errors
 	ServerError   ResponseType = 2
 )
 
@@ -99,7 +101,7 @@ func (h HttpClient) Delete(endpoint string) ServiceResponse {
 	return parseResponse(request, requestErr)
 }
 
-// It returns your DELETE response with your data
+// DeleteWithParameters func returns a response with your data
 func (h HttpClient) DeleteWithParameters(endpoint string, params interface{}) ServiceResponse {
 	json, _ := json.Marshal(params)
 	request, requestErr := http.NewRequest(http.MethodDelete, h.BaseUrl+endpoint, bytes.NewBuffer(json))
