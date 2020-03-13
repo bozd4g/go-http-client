@@ -108,7 +108,7 @@ func (h HttpClient) DeleteWithParameters(endpoint string, params interface{}) Se
 // It returns a ServiceResponse while checking errors
 func parseResponse(request *http.Request, requestErr error) ServiceResponse {
 	if requestErr != nil {
-		return errorResponse(requestErr.Error(), Error)
+		return errorResponse(requestErr.Error(), InternalError)
 	}
 
 	request.Header.Add("Content-Type", "application/json")
@@ -116,10 +116,8 @@ func parseResponse(request *http.Request, requestErr error) ServiceResponse {
 	client := &http.Client{}
 	response, responseErr := client.Do(request)
 
-	if responseErr != nil && response != nil {
+	if responseErr != nil {
 		return errorResponse(responseErr.Error(), ServerError)
-	} else if responseErr != nil {
-		return errorResponse(responseErr.Error(), Error)
 	}
 
 	defer response.Body.Close()
