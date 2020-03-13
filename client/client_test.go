@@ -13,14 +13,17 @@ type Todo struct {
 	Completed bool
 }
 
-func TestGetRequest (t *testing.T) {
-	client := client.HttpClient { BaseUrl: "https://jsonplaceholder.typicode.com/" }
+func TestGetRequest(t *testing.T) {
+	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
 	response := client.Get("posts/10")
 
 	t.Run("Returns a todo who have id as 10", func(t *testing.T) {
 		var got Todo
-		mapstructure.Decode(response.Data, &got)
 		want := 10
+		err := mapstructure.Decode(response.Data, &got)
+		if err != nil {
+			t.Error(err.Error())
+		}
 
 		if got.Id != want {
 			t.Errorf("Unexpected data. Got: %d, expected: %d", got.Id, want)
@@ -28,16 +31,19 @@ func TestGetRequest (t *testing.T) {
 	})
 }
 
-func TestGetRequestWithParameters (t *testing.T) {
-	client := client.HttpClient { BaseUrl: "https://jsonplaceholder.typicode.com/" }
-	response := client.GetWithParameters("posts", Todo {
+func TestGetRequestWithParameters(t *testing.T) {
+	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
+	response := client.GetWithParameters("posts", Todo{
 		Id: 11,
 	})
 
 	t.Run("Returns a todo who have id as 11", func(t *testing.T) {
 		var got []Todo
-		mapstructure.Decode(response.Data, &got)
 		want := 11
+		err := mapstructure.Decode(response.Data, &got)
+		if err != nil {
+			t.Error(err.Error())
+		}
 
 		if len(got) < 1 || got[10].Id != want {
 			t.Errorf("Unexpected data. Got: %d, expected: %d", got[10].Id, want)
@@ -45,8 +51,8 @@ func TestGetRequestWithParameters (t *testing.T) {
 	})
 }
 
-func TestPostRequest (t *testing.T) {
-	client := client.HttpClient { BaseUrl: "https://jsonplaceholder.typicode.com/" }
+func TestPostRequest(t *testing.T) {
+	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
 	response := client.Post("posts/20")
 
 	t.Run("Returns 200 response", func(t *testing.T) {
@@ -56,16 +62,19 @@ func TestPostRequest (t *testing.T) {
 	})
 }
 
-func TestPostRequestWithParameters (t *testing.T) {
-	client := client.HttpClient { BaseUrl: "https://jsonplaceholder.typicode.com/" }
+func TestPostRequestWithParameters(t *testing.T) {
+	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
 	response := client.PostWithParameters("posts", Todo{
 		Id: 21,
 	})
 
 	t.Run("Returns a todo who have id as 20", func(t *testing.T) {
 		var got Todo
-		mapstructure.Decode(response.Data, &got)
 		want := 21
+		err := mapstructure.Decode(response.Data, &got)
+		if err != nil {
+			t.Error(err.Error())
+		}
 
 		if got.Id != want {
 			t.Errorf("Unexpected data. Got: %d, expected: %d", got.Id, want)
@@ -73,14 +82,17 @@ func TestPostRequestWithParameters (t *testing.T) {
 	})
 }
 
-func TestPutRequest (t *testing.T) {
-	client := client.HttpClient { BaseUrl: "https://jsonplaceholder.typicode.com/" }
+func TestPutRequest(t *testing.T) {
+	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
 	response := client.Put("posts/30")
 
 	t.Run("Returns a todo who have id as 30", func(t *testing.T) {
 		var got Todo
-		mapstructure.Decode(response.Data, &got)
 		want := 30
+		err := mapstructure.Decode(response.Data, &got)
+		if err != nil {
+			t.Error(err.Error())
+		}
 
 		if got.Id != want {
 			t.Errorf("Unexpected data. Got: %d, expected: %d", got.Id, want)
@@ -88,9 +100,9 @@ func TestPutRequest (t *testing.T) {
 	})
 }
 
-func TestPutRequestWithParameters (t *testing.T) {
-	client := client.HttpClient { BaseUrl: "https://jsonplaceholder.typicode.com/" }
-	response := client.PutWithParameters("posts", Todo {
+func TestPutRequestWithParameters(t *testing.T) {
+	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
+	response := client.PutWithParameters("posts", Todo{
 		Id: 31,
 	})
 
@@ -101,8 +113,8 @@ func TestPutRequestWithParameters (t *testing.T) {
 	})
 }
 
-func TestDeleteRequest (t *testing.T) {
-	client := client.HttpClient { BaseUrl: "https://jsonplaceholder.typicode.com/" }
+func TestDeleteRequest(t *testing.T) {
+	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
 	response := client.Delete("posts/40")
 
 	t.Run("Returns 200 response", func(t *testing.T) {
@@ -112,9 +124,9 @@ func TestDeleteRequest (t *testing.T) {
 	})
 }
 
-func TestDeleteRequestWithParameters (t *testing.T) {
-	client := client.HttpClient { BaseUrl: "https://jsonplaceholder.typicode.com/" }
-	response := client.DeleteWithParameters("posts", Todo {
+func TestDeleteRequestWithParameters(t *testing.T) {
+	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
+	response := client.DeleteWithParameters("posts", Todo{
 		Id: 41,
 	})
 
