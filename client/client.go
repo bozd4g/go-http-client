@@ -9,12 +9,12 @@ import (
 	"net/http"
 )
 
-// The class object as below
+// The HttpClient is a struct who has BaseUrl property
 type HttpClient struct {
 	BaseUrl string
 }
 
-// The response type of service requests
+// The ServiceResponse is a struct who has IsSuccess, StatusCode and their text, Message and Data properties
 type ServiceResponse struct {
 	IsSuccess  bool
 	StatusCode ResponseType
@@ -23,14 +23,15 @@ type ServiceResponse struct {
 	Data       interface{}
 }
 
+// The ResponseType is a enum who has Success, InternalError and ServerError properties
 type ResponseType int
-
 const (
 	Success       ResponseType = 0
 	InternalError ResponseType = 1
 	ServerError   ResponseType = 2
 )
 
+// The Text func returns a string of ResponseType
 func (r ResponseType) Text() string {
 	if r == InternalError {
 		return "Request Error"
@@ -39,7 +40,7 @@ func (r ResponseType) Text() string {
 	return "Server Error"
 }
 
-// It returns your GET response with your data
+// Get func returns a response with your data
 func (h HttpClient) Get(endpoint string) ServiceResponse {
 	json, _ := json.Marshal(map[string]string{})
 	request, requestErr := http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s", h.BaseUrl, endpoint), bytes.NewBuffer(json))
@@ -47,7 +48,7 @@ func (h HttpClient) Get(endpoint string) ServiceResponse {
 	return parseResponse(request, requestErr)
 }
 
-// It returns your GET response with your data
+// GetWithParameters func returns a response with your data
 func (h HttpClient) GetWithParameters(endpoint string, params interface{}) ServiceResponse {
 	json, _ := json.Marshal(map[string]string{})
 	queryString, _ := query.Values(params)
@@ -57,7 +58,7 @@ func (h HttpClient) GetWithParameters(endpoint string, params interface{}) Servi
 	return parseResponse(request, requestErr)
 }
 
-// It returns your POST response with your data
+// Post func returns a response with your data
 func (h HttpClient) Post(endpoint string) ServiceResponse {
 	json, _ := json.Marshal(map[string]string{})
 	request, requestErr := http.NewRequest(http.MethodPost, h.BaseUrl+endpoint, bytes.NewBuffer(json))
@@ -65,7 +66,7 @@ func (h HttpClient) Post(endpoint string) ServiceResponse {
 	return parseResponse(request, requestErr)
 }
 
-// It returns your POST response with your data
+// PostWithParameters func returns a response with your data
 func (h HttpClient) PostWithParameters(endpoint string, params interface{}) ServiceResponse {
 	json, _ := json.Marshal(params)
 	request, requestErr := http.NewRequest(http.MethodPost, h.BaseUrl+endpoint, bytes.NewBuffer(json))
@@ -73,7 +74,7 @@ func (h HttpClient) PostWithParameters(endpoint string, params interface{}) Serv
 	return parseResponse(request, requestErr)
 }
 
-// It returns your PUT response with your data
+// Put func returns a response with your data
 func (h HttpClient) Put(endpoint string) ServiceResponse {
 	json, _ := json.Marshal(map[string]string{})
 	request, requestErr := http.NewRequest(http.MethodPut, h.BaseUrl+endpoint, bytes.NewBuffer(json))
@@ -81,7 +82,7 @@ func (h HttpClient) Put(endpoint string) ServiceResponse {
 	return parseResponse(request, requestErr)
 }
 
-// It returns your POST response with your data
+// PutWithParameters func returns a response with your data
 func (h HttpClient) PutWithParameters(endpoint string, params interface{}) ServiceResponse {
 	json, _ := json.Marshal(params)
 	request, requestErr := http.NewRequest(http.MethodPut, h.BaseUrl+endpoint, bytes.NewBuffer(json))
@@ -89,7 +90,7 @@ func (h HttpClient) PutWithParameters(endpoint string, params interface{}) Servi
 	return parseResponse(request, requestErr)
 }
 
-// It returns your DELETE response with your data
+// Delete func returns a response with your data
 func (h HttpClient) Delete(endpoint string) ServiceResponse {
 	json, _ := json.Marshal(map[string]string{})
 	request, requestErr := http.NewRequest(http.MethodDelete, h.BaseUrl+endpoint, bytes.NewBuffer(json))
@@ -105,7 +106,6 @@ func (h HttpClient) DeleteWithParameters(endpoint string, params interface{}) Se
 	return parseResponse(request, requestErr)
 }
 
-// It returns a ServiceResponse while checking errors
 func parseResponse(request *http.Request, requestErr error) ServiceResponse {
 	if requestErr != nil {
 		return errorResponse(requestErr.Error(), InternalError)
