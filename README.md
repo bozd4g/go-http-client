@@ -48,7 +48,7 @@ type Todo struct {
 
 func main() {
 	client := client.HttpClient{BaseUrl: "http://jsonplaceholder.typicode.com"}
-	response := client.PostWithParameters("/posts", Todo{
+	response := client.PostWith("/posts", Todo{
 		Id:        1,
 		UserId:    1,
 		Title:     "Lorem ipsum dolor sit amet",
@@ -85,13 +85,13 @@ You can call these functions from your application.
 | Function                                                  | Has Params |
 | --------------------------------------------------------- | ---------- |
 | Get(endpoint string)                                      | -          |
-| GetWithParameters(endpoint string, params interface {})   | Yes        |
+| GetWith(endpoint string, params interface {})   | Yes        |
 | Post(endpoint string)                                     | -          |
-| PostWithParameters(endpoint string, params interface {})  | Yes        |
+| PostWith(endpoint string, params interface {})  | Yes        |
 | Put(endpoint string)                                      | -          |
-| PutWithParameters(endpoint string, params interface{})    | Yes        |
+| PutWith(endpoint string, params interface{})    | Yes        |
 | Delete(endpoint string)                                   | -          |
-| DeleteWithParameters(endpoint string, params interface{}) | Yes        |
+| DeleteWith(endpoint string, params interface{}) | Yes        |
 
 # License
 Copyright (c) 2020 Furkan Bozdag
