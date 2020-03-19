@@ -42,9 +42,9 @@ func TestGetRequestAsWrong(t *testing.T) {
 	})
 }
 
-func TestGetRequestWithParameters(t *testing.T) {
+func TestGetRequestWith(t *testing.T) {
 	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
-	response := client.GetWithParameters("posts", Todo{
+	response := client.GetWith("posts", Todo{
 		Id: 11,
 	})
 
@@ -62,7 +62,7 @@ func TestGetRequestWithParameters(t *testing.T) {
 	})
 }
 
-func TestGetRequestWithParametersAsWrong(t *testing.T) {
+func TestGetRequestWithAsWrong(t *testing.T) {
 	client := client.HttpClient{BaseUrl: ""}
 	response := client.Get("posts/123123")
 
@@ -95,9 +95,9 @@ func TestPostRequestAsWrong(t *testing.T) {
 	})
 }
 
-func TestPostRequestWithParameters(t *testing.T) {
+func TestPostRequestWith(t *testing.T) {
 	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
-	response := client.PostWithParameters("posts", Todo{
+	response := client.PostWith("posts", Todo{
 		Id: 21,
 	})
 
@@ -115,9 +115,9 @@ func TestPostRequestWithParameters(t *testing.T) {
 	})
 }
 
-func TestPostRequestWithParametersAsWrong(t *testing.T) {
+func TestPostRequestWithAsWrong(t *testing.T) {
 	client := client.HttpClient{BaseUrl: ""}
-	response := client.PostWithParameters("qeqwe", Todo{
+	response := client.PostWith("qeqwe", Todo{
 		Id: -111111111,
 	})
 
@@ -157,9 +157,9 @@ func TestPutRequestAsWrong(t *testing.T) {
 	})
 }
 
-func TestPutRequestWithParameters(t *testing.T) {
+func TestPutRequestWith(t *testing.T) {
 	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
-	response := client.PutWithParameters("posts", Todo{
+	response := client.PutWith("posts", Todo{
 		Id: 31,
 	})
 
@@ -170,9 +170,9 @@ func TestPutRequestWithParameters(t *testing.T) {
 	})
 }
 
-func TestPutRequestWithParametersAsWrong(t *testing.T) {
+func TestPutRequestWithAsWrong(t *testing.T) {
 	client := client.HttpClient{BaseUrl: ""}
-	response := client.PutWithParameters("", Todo{
+	response := client.PutWith("", Todo{
 		Id: -111111111,
 	})
 
@@ -205,9 +205,9 @@ func TestDeleteRequestAsWrong(t *testing.T) {
 	})
 }
 
-func TestDeleteRequestWithParameters(t *testing.T) {
+func TestDeleteRequestWith(t *testing.T) {
 	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
-	response := client.DeleteWithParameters("posts", Todo{
+	response := client.DeleteWith("posts", Todo{
 		Id: 41,
 	})
 
@@ -218,9 +218,9 @@ func TestDeleteRequestWithParameters(t *testing.T) {
 	})
 }
 
-func TestDeleteRequestWithParametersAsWrong(t *testing.T) {
+func TestDeleteRequestWithAsWrong(t *testing.T) {
 	client := client.HttpClient{BaseUrl: ""}
-	response := client.DeleteWithParameters("", Todo{
+	response := client.DeleteWith("", Todo{
 		Id: -111111111,
 	})
 

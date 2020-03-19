@@ -52,8 +52,8 @@ func (h HttpClient) Get(endpoint string) ServiceResponse {
 	return parseResponse(request, requestErr)
 }
 
-// GetWithParameters func returns a response with your data
-func (h HttpClient) GetWithParameters(endpoint string, params interface{}) ServiceResponse {
+// GetWith func returns a response with your data
+func (h HttpClient) GetWith(endpoint string, params interface{}) ServiceResponse {
 	json, _ := json.Marshal(map[string]string{})
 	queryString, _ := query.Values(params)
 
@@ -70,8 +70,8 @@ func (h HttpClient) Post(endpoint string) ServiceResponse {
 	return parseResponse(request, requestErr)
 }
 
-// PostWithParameters func returns a response with your data
-func (h HttpClient) PostWithParameters(endpoint string, params interface{}) ServiceResponse {
+// PostWith func returns a response with your data
+func (h HttpClient) PostWith(endpoint string, params interface{}) ServiceResponse {
 	json, _ := json.Marshal(params)
 	request, requestErr := http.NewRequest(http.MethodPost, h.BaseUrl+endpoint, bytes.NewBuffer(json))
 
@@ -86,8 +86,8 @@ func (h HttpClient) Put(endpoint string) ServiceResponse {
 	return parseResponse(request, requestErr)
 }
 
-// PutWithParameters func returns a response with your data
-func (h HttpClient) PutWithParameters(endpoint string, params interface{}) ServiceResponse {
+// PutWith func returns a response with your data
+func (h HttpClient) PutWith(endpoint string, params interface{}) ServiceResponse {
 	json, _ := json.Marshal(params)
 	request, requestErr := http.NewRequest(http.MethodPut, h.BaseUrl+endpoint, bytes.NewBuffer(json))
 
@@ -102,8 +102,8 @@ func (h HttpClient) Delete(endpoint string) ServiceResponse {
 	return parseResponse(request, requestErr)
 }
 
-// DeleteWithParameters func returns a response with your data
-func (h HttpClient) DeleteWithParameters(endpoint string, params interface{}) ServiceResponse {
+// DeleteWith func returns a response with your data
+func (h HttpClient) DeleteWith(endpoint string, params interface{}) ServiceResponse {
 	json, _ := json.Marshal(params)
 	request, requestErr := http.NewRequest(http.MethodDelete, h.BaseUrl+endpoint, bytes.NewBuffer(json))
 
