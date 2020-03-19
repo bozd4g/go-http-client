@@ -31,6 +31,17 @@ func TestGetRequest(t *testing.T) {
 	})
 }
 
+func TestGetRequestAsWrong(t *testing.T) {
+	client := client.HttpClient{BaseUrl: ""}
+	response := client.Get("posts/123123")
+
+	t.Run("Returns an error", func(t *testing.T) {
+		if response.IsSuccess == true {
+			t.Errorf("Unexpected data. Got: %v, expected: %v", true, false)
+		}
+	})
+}
+
 func TestGetRequestWithParameters(t *testing.T) {
 	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
 	response := client.GetWithParameters("posts", Todo{
@@ -51,6 +62,17 @@ func TestGetRequestWithParameters(t *testing.T) {
 	})
 }
 
+func TestGetRequestWithParametersAsWrong(t *testing.T) {
+	client := client.HttpClient{BaseUrl: ""}
+	response := client.Get("posts/123123")
+
+	t.Run("Returns an error", func(t *testing.T) {
+		if response.StatusCode != 2 {
+			t.Errorf("Unexpected data. Got: %v, expected: %v", response.StatusCode, 2)
+		}
+	})
+}
+
 func TestPostRequest(t *testing.T) {
 	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
 	response := client.Post("posts/20")
@@ -58,6 +80,17 @@ func TestPostRequest(t *testing.T) {
 	t.Run("Returns 200 response", func(t *testing.T) {
 		if response.IsSuccess == false {
 			t.Errorf("Unexpected data. Got: %t, expected: %t", false, true)
+		}
+	})
+}
+
+func TestPostRequestAsWrong(t *testing.T) {
+	client := client.HttpClient{BaseUrl: ""}
+	response := client.Post("posts/23213123")
+
+	t.Run("Returns an error", func(t *testing.T) {
+		if response.IsSuccess == true {
+			t.Errorf("Unexpected data. Got: %v, expected: %v", true, false)
 		}
 	})
 }
@@ -82,6 +115,20 @@ func TestPostRequestWithParameters(t *testing.T) {
 	})
 }
 
+func TestPostRequestWithParametersAsWrong(t *testing.T) {
+	client := client.HttpClient{BaseUrl: ""}
+	response := client.PostWithParameters("qeqwe", Todo{
+		Id: -111111111,
+	})
+
+	t.Run("Returns an error", func(t *testing.T) {
+		if response.StatusCode != 2 {
+			t.Errorf("Unexpected data. Got: %v, expected: %v", response.StatusCode, 2)
+		}
+	})
+}
+
+
 func TestPutRequest(t *testing.T) {
 	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
 	response := client.Put("posts/30")
@@ -100,6 +147,17 @@ func TestPutRequest(t *testing.T) {
 	})
 }
 
+func TestPutRequestAsWrong(t *testing.T) {
+	client := client.HttpClient{BaseUrl: ""}
+	response := client.Put("posts/asdasd")
+
+	t.Run("Returns an error", func(t *testing.T) {
+		if response.IsSuccess == true {
+			t.Errorf("Unexpected data. Got: %v, expected: %v", true, false)
+		}
+	})
+}
+
 func TestPutRequestWithParameters(t *testing.T) {
 	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
 	response := client.PutWithParameters("posts", Todo{
@@ -113,6 +171,20 @@ func TestPutRequestWithParameters(t *testing.T) {
 	})
 }
 
+func TestPutRequestWithParametersAsWrong(t *testing.T) {
+	client := client.HttpClient{BaseUrl: ""}
+	response := client.PutWithParameters("", Todo{
+		Id: -111111111,
+	})
+
+	t.Run("Returns an error", func(t *testing.T) {
+		if response.StatusCode != 2 {
+			t.Errorf("Unexpected data. Got: %v, expected: %v", response.StatusCode, 2)
+		}
+	})
+}
+
+
 func TestDeleteRequest(t *testing.T) {
 	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
 	response := client.Delete("posts/40")
@@ -120,6 +192,17 @@ func TestDeleteRequest(t *testing.T) {
 	t.Run("Returns 200 response", func(t *testing.T) {
 		if response.IsSuccess == false {
 			t.Errorf("Unexpected data. Got: %t, expected: %t", false, true)
+		}
+	})
+}
+
+func TestDeleteRequestAsWrong(t *testing.T) {
+	client := client.HttpClient{BaseUrl: ""}
+	response := client.Delete("posts/asdasd")
+
+	t.Run("Returns an error", func(t *testing.T) {
+		if response.IsSuccess == true {
+			t.Errorf("Unexpected data. Got: %v, expected: %v", true, false)
 		}
 	})
 }
@@ -133,6 +216,19 @@ func TestDeleteRequestWithParameters(t *testing.T) {
 	t.Run("Returns 200 response", func(t *testing.T) {
 		if response.IsSuccess == false {
 			t.Errorf("Unexpected data. Got: %t, expected: %t", false, true)
+		}
+	})
+}
+
+func TestDeleteRequestWithParametersAsWrong(t *testing.T) {
+	client := client.HttpClient{BaseUrl: ""}
+	response := client.DeleteWithParameters("", Todo{
+		Id: -111111111,
+	})
+
+	t.Run("Returns an error", func(t *testing.T) {
+		if response.StatusCode != 2 {
+			t.Errorf("Unexpected data. Got: %v, expected: %v", response.StatusCode, 2)
 		}
 	})
 }
