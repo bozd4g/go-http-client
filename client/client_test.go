@@ -128,7 +128,6 @@ func TestPostRequestWithParametersAsWrong(t *testing.T) {
 	})
 }
 
-
 func TestPutRequest(t *testing.T) {
 	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
 	response := client.Put("posts/30")
@@ -183,7 +182,6 @@ func TestPutRequestWithParametersAsWrong(t *testing.T) {
 		}
 	})
 }
-
 
 func TestDeleteRequest(t *testing.T) {
 	client := client.HttpClient{BaseUrl: "https://jsonplaceholder.typicode.com/"}
