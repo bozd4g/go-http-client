@@ -21,6 +21,9 @@
   <a href="https://bozd4g.mit-license.org/"><img src="https://img.shields.io/badge/License-MIT-blue.svg"></a>
   <a href="https://travis-ci.org/bozd4g/go-http-client"><img src="https://travis-ci.org/bozd4g/go-http-client.svg?branch=master"></a>
   <a href="https://goreportcard.com/report/github.com/bozd4g/go-http-client"><img src="https://goreportcard.com/badge/github.com/bozd4g/go-http-client"></a>
+<a href="https://codecov.io/gh/bozd4g/go-http-client">
+<img alt="Coverage" src="https://codecov.io/gh/bozd4g/go-http-client/branch/master/graphs/badge.svg?branch=master">
+</a>
 </p>
 
 This package provides you a http client package for your http requests. You can send requests quicly with this package. If you want to contribute this package, please fork and [create](https://github.com/bozd4g/go-http-client/pulls) a pull request.
