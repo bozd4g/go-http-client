@@ -4,7 +4,7 @@ go:
   - master
 
 install:
-  - go mod install
+  - go mod download
 
 notifications:
   email: true
