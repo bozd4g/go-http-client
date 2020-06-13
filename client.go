@@ -25,7 +25,6 @@ type IHttpClient interface {
 	Delete(endpoint string) (*http.Request, error)
 	DeleteWith(endpoint string, params interface{}) (*http.Request, error)
 	Do(request *http.Request) ServiceResponse
-	AddDefaultHeaders()
 }
 
 // ServiceResponse is a struct who has IsSuccess, StatusCode, Message and Data properties
