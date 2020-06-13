@@ -4,8 +4,7 @@ go:
   - master
 
 install:
-  - go get -t -v github.com/google/go-querystring/query
-  - go get -t -v github.com/mitchellh/mapstructure
+  - go mod install
 
 notifications:
   email: true
