@@ -78,7 +78,7 @@ func main() {
 
 ## Functions
 
-All functions return a type called ServiceResponse as below.
+Do function returns a type called ServiceResponse as below.
 ```go
 type ServiceResponse struct {
 	IsSuccess   bool
