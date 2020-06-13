@@ -24,6 +24,9 @@
 <a href="https://codecov.io/gh/bozd4g/go-http-client">
 <img alt="Coverage" src="https://codecov.io/gh/bozd4g/go-http-client/branch/master/graphs/badge.svg?branch=master">
 </a>
+<a href="https://github.com/avelino/awesome-go">
+<img alt="awesome" src="https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg">
+</a>
 </p>
 
 This package provides you a http client package for your http requests. You can send requests quicly with this package. If you want to contribute this package, please fork and [create](https://github.com/bozd4g/go-http-client/pulls) a pull request.
@@ -37,9 +40,9 @@ $ go get github.com/bozd4g/go-http-client/
 # Usage
 ```go
 import (
+	"encoding/json"
 	"fmt"
-	"github.com/bozd4g/go-http-client/client"
-	"github.com/mitchellh/mapstructure"
+	client "github.com/bozd4g/go_http_client"
 )
 
 type Todo struct {
@@ -50,17 +53,20 @@ type Todo struct {
 }
 
 func main() {
-	client := client.HttpClient{BaseUrl: "http://jsonplaceholder.typicode.com"}
-	response := client.PostWith("/posts", Todo{
-		Id:        1,
-		UserId:    1,
-		Title:     "Lorem ipsum dolor sit amet",
-		Completed: true,
-	})
+	httpClient := client.New("https://jsonplaceholder.typicode.com/")
+	request, err := httpClient.Get("posts/10")
 
+	if err != nil {
+		panic(err)
+	}
+
+	response := httpClient.Do(request)
 	if response.IsSuccess {
 		var todo Todo
-		mapstructure.Decode(response.Data, &todo)
+		err := json.Unmarshal([]byte(response.Data), &todo)
+		if err != nil {
+			panic(err)
+		}
 		fmt.Println(todo.Title) // Lorem ipsum dolor sit amet
 
 	} else {
@@ -75,11 +81,10 @@ func main() {
 All functions return a type called ServiceResponse as below.
 ```go
 type ServiceResponse struct {
-	IsSuccess bool
-	StatusCode int
-	StatusText string
-	Message string
-	Data interface {}
+	IsSuccess   bool
+	StatusCode  int
+	Message     string
+	Data        string 
 }
 ```
 
@@ -87,14 +92,15 @@ You can call these functions from your application.
 
 | Function                                                  | Has Params |
 | --------------------------------------------------------- | ---------- |
-| Get(endpoint string)                                      | -          |
+| Get(endpoint string)                                      | - |
 | GetWith(endpoint string, params interface {})   | Yes        |
-| Post(endpoint string)                                     | -          |
+| Post(endpoint string)                                     | - |
 | PostWith(endpoint string, params interface {})  | Yes        |
-| Put(endpoint string)                                      | -          |
+| Put(endpoint string)                                      | - |
 | PutWith(endpoint string, params interface{})    | Yes        |
-| Delete(endpoint string)                                   | -          |
-| DeleteWith(endpoint string, params interface{}) | Yes        |
+| Delete(endpoint string)                                   | - |
+| DeleteWith(endpoint string, params interface{}) | Yes         |
+| Do() | No |
 
 # License
 Copyright (c) 2020 Furkan Bozdag
