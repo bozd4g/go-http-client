@@ -2,7 +2,7 @@ package go_http_client_test
 
 import (
 	"encoding/json"
-	client "github.com/bozd4g/go_http_client"
+	client "github.com/bozd4g/go-http-client"
 	"testing"
 )
 
