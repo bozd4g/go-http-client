@@ -72,6 +72,15 @@ func main() {
 	} else {
 		fmt.Println(response.Message)
 	}
+
+   	// or  
+   	var todo2 Todo     
+	err = httpClient.Do(request).To(&todo2)
+	if err != nil {
+		fmt.Println(todo.Title) // Lorem ipsum dolor sit amet
+	} else {
+		fmt.Println(response.Message)
+	}
 }
 
 ```

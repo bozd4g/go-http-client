@@ -101,6 +101,28 @@ func TestGetRequestWithAsWrong(t *testing.T) {
 	})
 }
 
+func TestGetRequestWithTo(t *testing.T) {
+	httpClient := client.New("https://jsonplaceholder.typicode.com/")
+	request, err := httpClient.Get("posts/10")
+
+	t.Run("Returns a todo who have id as 10", func(t *testing.T) {
+		if err != nil {
+			t.Error(err.Error())
+		}
+
+		var got Todo
+		want := 10
+		err := httpClient.Do(request).To(&got)
+		if err != nil {
+			t.Error(err.Error())
+		}
+
+		if got.Id != want {
+			t.Errorf("Unexpected data. Got: %d, expected: %d", got.Id, want)
+		}
+	})
+}
+
 func TestPostRequest(t *testing.T) {
 	httpClient := client.New("https://jsonplaceholder.typicode.com/")
 	request, err := httpClient.Post("posts/20")

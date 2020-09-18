@@ -154,3 +154,8 @@ func (h httpClient) Do(request *http.Request) ServiceResponse {
 		Data:       string(body),
 	}
 }
+
+// To func returns converts string to struct
+func (s ServiceResponse) To(value interface{}) error {
+	return json.Unmarshal([]byte(s.Data), &value)
+}
