@@ -109,7 +109,8 @@ You can call these functions from your application.
 | PutWith(endpoint string, params interface{})    | Yes        |
 | Delete(endpoint string)                                   | - |
 | DeleteWith(endpoint string, params interface{}) | Yes         |
-| Do() | No |
+| Do() | - |
+| To(value interface{}) | - |
 
 # License
 Copyright (c) 2020 Furkan Bozdag
