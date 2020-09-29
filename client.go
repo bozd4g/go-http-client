@@ -3,6 +3,7 @@ package go_http_client
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/google/go-querystring/query"
 	"io/ioutil"
@@ -157,5 +158,9 @@ func (h httpClient) Do(request *http.Request) ServiceResponse {
 
 // To func returns converts string to struct
 func (s ServiceResponse) To(value interface{}) error {
-	return json.Unmarshal([]byte(s.Data), &value)
+	if s.Data != "" {
+		return json.Unmarshal([]byte(s.Data), &value)
+	}
+
+	return errors.New("response body cannot be empty")
 }
