@@ -42,7 +42,7 @@ $ go get github.com/bozd4g/go-http-client/
 import (
 	"encoding/json"
 	"fmt"
-	client "github.com/bozd4g/go_http_client"
+	client "github.com/bozd4g/go-http-client"
 )
 
 type Todo struct {
