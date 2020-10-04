@@ -157,10 +157,10 @@ func (h httpClient) Do(request *http.Request) ServiceResponse {
 }
 
 // To func returns converts string to struct
-func (s ServiceResponse) To(value interface{}) error {
+func (s ServiceResponse) To(value interface{}) (ServiceResponse, error) {
 	if s.Data != "" {
-		return json.Unmarshal([]byte(s.Data), &value)
+		return s, json.Unmarshal([]byte(s.Data), &value)
 	}
 
-	return errors.New("response body cannot be empty")
+	return s, errors.New("response body cannot be empty")
 }

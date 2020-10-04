@@ -112,7 +112,7 @@ func TestGetRequestWithTo(t *testing.T) {
 
 		var got Todo
 		want := 10
-		err := httpClient.Do(request).To(&got)
+		_, err := httpClient.Do(request).To(&got)
 		if err != nil {
 			t.Error(err.Error())
 		}
