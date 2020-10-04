@@ -28,12 +28,12 @@ type IHttpClient interface {
 	Do(request *http.Request) ServiceResponse
 }
 
-// ServiceResponse is a struct who has IsSuccess, StatusCode, Message and Data properties
+// ServiceResponse is a struct who has IsSuccess, StatusCode, Error and Data properties
 type ServiceResponse struct {
 	IsSuccess  bool
-	StatusCode int
-	Message    string
 	Data       string
+	StatusCode int
+	Error      error
 }
 
 // New func returns a IHttpClient interface
@@ -134,7 +134,7 @@ func (h httpClient) Do(request *http.Request) ServiceResponse {
 	if err != nil {
 		return ServiceResponse{
 			StatusCode: -1,
-			Message:    "An error occured while doing the request!",
+			Error:      err,
 		}
 	}
 
@@ -144,15 +144,15 @@ func (h httpClient) Do(request *http.Request) ServiceResponse {
 	if err != nil {
 		return ServiceResponse{
 			StatusCode: -1,
-			Message:    "An error occured while reading the body of response!",
+			Error:      err,
 		}
 	}
 
 	return ServiceResponse{
 		IsSuccess:  true,
 		StatusCode: response.StatusCode,
-		Message:    "Success",
 		Data:       string(body),
+		Error:      nil,
 	}
 }
 

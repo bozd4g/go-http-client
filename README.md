@@ -70,16 +70,16 @@ func main() {
 		fmt.Println(todo.Title) // Lorem ipsum dolor sit amet
 
 	} else {
-		fmt.Println(response.Message)
+		fmt.Println(response.Error)
 	}
 
    	// or  
    	var todo2 Todo     
 	response, err = httpClient.Do(request).To(&todo2)
 	if err != nil {
-		fmt.Println(todo.Title) // Lorem ipsum dolor sit amet
+		fmt.Println(todo2.Title) // Lorem ipsum dolor sit amet
 	} else {
-		fmt.Println(response.Message)
+		fmt.Println(err.Error())
 	}
 }
 
