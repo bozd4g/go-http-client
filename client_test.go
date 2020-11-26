@@ -303,6 +303,96 @@ func TestPutRequestWithAsWrong(t *testing.T) {
 	})
 }
 
+func TestPatchRequest(t *testing.T) {
+	httpClient := client.New("https://jsonplaceholder.typicode.com/")
+	request, err := httpClient.Patch("posts/22")
+
+	t.Run("Returns a todo who have id as 22", func(t *testing.T) {
+		if err != nil {
+			t.Error(err.Error())
+		}
+
+		response := httpClient.Do(request)
+		if !response.IsSuccess {
+			t.Errorf("Unexpected data. Got: %v, expected: %v", true, false)
+		}
+
+		var got Todo
+		want := 22
+		err := json.Unmarshal([]byte(response.Data), &got)
+		if err != nil {
+			t.Error(err.Error())
+		}
+
+		if got.Id != want {
+			t.Errorf("Unexpected data. Got: %d, expected: %d", got.Id, want)
+		}
+	})
+}
+
+func TestPatchRequestAsWrong(t *testing.T) {
+	httpClient := client.New("https://jsonplaceholder.typicode.com/")
+	request, err := httpClient.Patch("posts/456")
+
+	t.Run("Returns an error", func(t *testing.T) {
+		if err != nil {
+			t.Error(err.Error())
+		}
+
+		response := httpClient.Do(request)
+		if !response.IsSuccess {
+			t.Errorf("Unexpected data. Got: %v, expected: %v", true, false)
+		}
+	})
+}
+
+func TestPatchRequestWith(t *testing.T) {
+	httpClient := client.New("https://jsonplaceholder.typicode.com/")
+	request, err := httpClient.PatchWith("posts/12", Todo{
+		Id: 33,
+	})
+
+	t.Run("Returns a todo who have id as 33", func(t *testing.T) {
+		if err != nil {
+			t.Error(err.Error())
+		}
+
+		response := httpClient.Do(request)
+		if !response.IsSuccess {
+			t.Errorf("Unexpected data. Got: %v, expected: %v", true, false)
+		}
+
+		var got Todo
+		want := 12
+		err := json.Unmarshal([]byte(response.Data), &got)
+		if err != nil {
+			t.Error(err.Error())
+		}
+
+		if got.Id != want {
+			t.Errorf("Unexpected data. Got: %d, expected: %d", got.Id, want)
+		}
+	})
+}
+
+func TestPatchRequestWithAsWrong(t *testing.T) {
+	httpClient := client.New("https://jsonplaceholder.typicode.com/")
+	request, err := httpClient.PatchWith("qeqwe", Todo{
+		Id: -111111111,
+	})
+
+	t.Run("Returns an error", func(t *testing.T) {
+		if err != nil {
+			t.Error(err.Error())
+		}
+
+		response := httpClient.Do(request)
+		if !response.IsSuccess {
+			t.Errorf("Unexpected data. Got: %v, expected: %v", true, false)
+		}
+	})
+}
+
 func TestDeleteRequest(t *testing.T) {
 	httpClient := client.New("https://jsonplaceholder.typicode.com/")
 	request, err := httpClient.Delete("posts/40")
@@ -392,4 +482,3 @@ func TestDeleteRequestWithAsWrong(t *testing.T) {
 		}
 	})
 }
-
