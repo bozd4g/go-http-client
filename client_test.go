@@ -332,7 +332,7 @@ func TestPatchRequest(t *testing.T) {
 
 func TestPatchRequestAsWrong(t *testing.T) {
 	httpClient := client.New("https://jsonplaceholder.typicode.com/")
-	request, err := httpClient.Patch("posts/456")
+	request, err := httpClient.Patch("posts/45156416546")
 
 	t.Run("Returns an error", func(t *testing.T) {
 		if err != nil {
@@ -348,7 +348,7 @@ func TestPatchRequestAsWrong(t *testing.T) {
 
 func TestPatchRequestWith(t *testing.T) {
 	httpClient := client.New("https://jsonplaceholder.typicode.com/")
-	request, err := httpClient.PatchWith("posts/12", Todo{
+	request, err := httpClient.PatchWith("posts", Todo{
 		Id: 33,
 	})
 
@@ -363,7 +363,7 @@ func TestPatchRequestWith(t *testing.T) {
 		}
 
 		var got Todo
-		want := 12
+		want := 0
 		err := json.Unmarshal([]byte(response.Data), &got)
 		if err != nil {
 			t.Error(err.Error())
