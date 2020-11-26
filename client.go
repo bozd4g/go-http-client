@@ -23,6 +23,8 @@ type IHttpClient interface {
 	PostWith(endpoint string, params interface{}) (*http.Request, error)
 	Put(endpoint string) (*http.Request, error)
 	PutWith(endpoint string, params interface{}) (*http.Request, error)
+	Patch(endpoint string) (*http.Request, error)
+	PatchWith(endpoint string, params interface{}) (*http.Request, error)
 	Delete(endpoint string) (*http.Request, error)
 	DeleteWith(endpoint string, params interface{}) (*http.Request, error)
 	Do(request *http.Request) ServiceResponse
@@ -104,6 +106,26 @@ func (h httpClient) PutWith(endpoint string, params interface{}) (*http.Request,
 	}
 
 	return http.NewRequest(http.MethodPut, h.BaseUrl+endpoint, bytes.NewBuffer(json))
+}
+
+// Patch func returns a request
+func (h httpClient) Patch(endpoint string) (*http.Request, error) {
+	json, err := json.Marshal(map[string]string{})
+	if err != nil {
+		return nil, err
+	}
+
+	return http.NewRequest(http.MethodPatch, h.BaseUrl+endpoint, bytes.NewBuffer(json))
+}
+
+// PatchWith func returns a request
+func (h httpClient) PatchWith(endpoint string, params interface{}) (*http.Request, error) {
+	json, err := json.Marshal(params)
+	if err != nil {
+		return nil, err
+	}
+
+	return http.NewRequest(http.MethodPatch, h.BaseUrl+endpoint, bytes.NewBuffer(json))
 }
 
 // Delete func returns a request
