@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <a href="https://godoc.org/github.com/bozd4g/go-http-client/client" target="_blank">Documentation on GoDoc 🔗</a>
+  <a href="https://pkg.go.dev/github.com/bozd4g/go-http-client" target="_blank">Documentation on go.dev 🔗</a>
 </p>
 
 <p align="center">
@@ -32,7 +32,6 @@
 This package provides you a http client package for your http requests. You can send requests quicly with this package. If you want to contribute this package, please fork and [create](https://github.com/bozd4g/go-http-client/pulls) a pull request.
 
 # Installation
-
 ```
 $ go get github.com/bozd4g/go-http-client/
 ```
@@ -86,8 +85,8 @@ func main() {
 ```
 
 ## Functions
-
 Do function returns a type called ServiceResponse as below.
+
 ```go
 type ServiceResponse struct {
 	IsSuccess   bool
@@ -105,6 +104,8 @@ You can call these functions from your application.
 | GetWith(endpoint string, params interface {})   | Yes        |
 | Post(endpoint string)                                     | - |
 | PostWith(endpoint string, params interface {})  | Yes        |
+| Patch(endpoint string)                                      | - |
+| PatchWith(endpoint string, params interface{})    | Yes        |
 | Put(endpoint string)                                      | - |
 | PutWith(endpoint string, params interface{})    | Yes        |
 | Delete(endpoint string)                                   | - |
