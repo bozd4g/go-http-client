@@ -33,7 +33,7 @@ This package provides you a http client package for your http requests. You can 
 
 # Installation
 ```
-$ go get github.com/bozd4g/go-http-client/
+$ go get -u github.com/bozd4g/go-http-client/
 ```
 
 # Usage
