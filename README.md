@@ -45,57 +45,46 @@ import (
 )
 
 type Todo struct {
-	Id        int
-	UserId    int
-	Title     string
-	Completed bool
+    Id        int
+    UserId    int
+    Title     string
+    Completed bool
 }
 
 func main() {
-	httpClient := client.New("https://jsonplaceholder.typicode.com/")
-	request, err := httpClient.Get("posts/10")
+    httpClient := client.New("https://jsonplaceholder.typicode.com/")
+    request, err := httpClient.Get("posts/10")
+    
+    if err != nil {
+        panic(err)
+    }
+    
+    response, err := httpClient.Do(request)
+    if err != nil {
+        panic(err)
+    }
+    
+    var todo Todo
+    err = json.Unmarshal(response.Get().Body, &todo)
+    if err != nil {
+        panic(err)
+    }
+    fmt.Println(todo.Title) // Lorem ipsum dolor sit amet
 
-	if err != nil {
-		panic(err)
-	}
-
-	response := httpClient.Do(request)
-	if response.IsSuccess {
-		var todo Todo
-		err := json.Unmarshal([]byte(response.Data), &todo)
-		if err != nil {
-			panic(err)
-		}
-		fmt.Println(todo.Title) // Lorem ipsum dolor sit amet
-
-	} else {
-		fmt.Println(response.Error)
-	}
-
-   	// or  
-   	var todo2 Todo     
-	response, err = httpClient.Do(request).To(&todo2)
-	if err != nil {
-		fmt.Println(todo2.Title) // Lorem ipsum dolor sit amet
-	} else {
-		fmt.Println(err.Error())
-	}
+    // or  
+    var todo2 Todo     
+    response, err = httpClient.Do(request)
+    if err != nil {
+        response.To(&todo2)
+        fmt.Println(todo2.Title) // Lorem ipsum dolor sit amet
+    } else {
+        fmt.Println(err.Error())
+    }
 }
 
 ```
 
 ## Functions
-Do function returns a type called ServiceResponse as below.
-
-```go
-type ServiceResponse struct {
-	IsSuccess   bool
-	StatusCode  int
-	Message     string
-	Data        string 
-}
-```
-
 You can call these functions from your application.
 
 | Function                                                  | Has Params |
@@ -110,7 +99,7 @@ You can call these functions from your application.
 | PutWith(endpoint string, params interface{})    | Yes        |
 | Delete(endpoint string)                                   | - |
 | DeleteWith(endpoint string, params interface{}) | Yes         |
-| Do() | - |
+| Do() (IHttpResponse, error) | - |
 | To(value interface{}) | - |
 
 # License
