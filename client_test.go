@@ -2,7 +2,6 @@ package gohttpclient
 
 import (
 	"encoding/json"
-	client "github.com/bozd4g/go-http-client"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"net/http"
@@ -18,7 +17,7 @@ type Todo struct {
 
 type TestSuite struct {
 	suite.Suite
-	httpClient client.IHttpClient
+	httpClient IHttpClient
 }
 
 func TestInit(t *testing.T) {
@@ -26,7 +25,7 @@ func TestInit(t *testing.T) {
 }
 
 func (s *TestSuite) SetupSuite() {
-	s.httpClient = client.New("https://jsonplaceholder.typicode.com/")
+	s.httpClient = New("https://jsonplaceholder.typicode.com/")
 }
 
 func (s *TestSuite) Test_GetRequest_ReturnsSuccess() {
@@ -204,7 +203,7 @@ func (s *TestSuite) Test_DeleteRequestWith_WhenRequestIsInvalid_ReturnsError() {
 
 func (s *TestSuite) Test_DoFunction_WhenMakeRequest_ReturnsError() {
 	var invalidUrl string
-	httpClient := client.New(invalidUrl)
+	httpClient := New(invalidUrl)
 	request, err := httpClient.Get("posts/10")
 	require.NoError(s.T(), err)
 
@@ -228,7 +227,7 @@ func (s *TestSuite) Test_ToFunction_ReturnsSuccess() {
 }
 
 func (s *TestSuite) Test_ToFunction_WhenBodyIsInvalid_ReturnsError() {
-	httpClient := client.New("http://google.com/")
+	httpClient := New("http://google.com/")
 	request, err := httpClient.Get("qweqwe")
 	require.NoError(s.T(), err)
 
