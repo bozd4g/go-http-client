@@ -1,4 +1,4 @@
-package go_http_client_test
+package gohttpclient
 
 import (
 	"encoding/json"

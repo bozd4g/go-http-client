@@ -1,4 +1,4 @@
-package go_http_client
+package gohttpclient
 
 import "net/http"
 
