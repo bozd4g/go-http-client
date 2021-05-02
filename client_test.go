@@ -17,7 +17,7 @@ type Todo struct {
 
 type TestSuite struct {
 	suite.Suite
-	httpClient IHttpClient
+	client Client
 }
 
 func TestInit(t *testing.T) {
@@ -25,14 +25,14 @@ func TestInit(t *testing.T) {
 }
 
 func (s *TestSuite) SetupSuite() {
-	s.httpClient = New("https://jsonplaceholder.typicode.com/")
+	s.client = New("https://jsonplaceholder.typicode.com/")
 }
 
 func (s *TestSuite) Test_GetRequest_ReturnsSuccess() {
-	request, err := s.httpClient.Get("posts/10")
+	request, err := s.client.Get("posts/10")
 	require.NoError(s.T(), err)
 
-	response, err := s.httpClient.Do(request)
+	response, err := s.client.Do(request)
 	require.NoError(s.T(), err)
 
 	var got Todo
@@ -44,10 +44,10 @@ func (s *TestSuite) Test_GetRequest_ReturnsSuccess() {
 }
 
 func (s *TestSuite) Test_GetRequestWith_ReturnsSuccess() {
-	request, err := s.httpClient.GetWith("posts", Todo{Id: 11})
+	request, err := s.client.GetWith("posts", Todo{Id: 11})
 	require.NoError(s.T(), err)
 
-	response, err := s.httpClient.Do(request)
+	response, err := s.client.Do(request)
 	require.NoError(s.T(), err)
 
 	var got []Todo
@@ -58,16 +58,16 @@ func (s *TestSuite) Test_GetRequestWith_ReturnsSuccess() {
 }
 
 func (s *TestSuite) Test_GetRequestWith_WhenRequestIsInvalid_ReturnsError() {
-	request, err := s.httpClient.GetWith("posts", "Lorem ipsum dolor")
+	request, err := s.client.GetWith("posts", "Lorem ipsum dolor")
 	require.Nil(s.T(), request)
 	require.Error(s.T(), err)
 }
 
 func (s *TestSuite) Test_PostRequest_ReturnsSuccess() {
-	request, err := s.httpClient.Post("posts")
+	request, err := s.client.Post("posts")
 	require.NoError(s.T(), err)
 
-	response, err := s.httpClient.Do(request)
+	response, err := s.client.Do(request)
 	require.NoError(s.T(), err)
 
 	var got Todo
@@ -79,10 +79,10 @@ func (s *TestSuite) Test_PostRequest_ReturnsSuccess() {
 }
 
 func (s *TestSuite) Test_PostRequestWith_ReturnsSuccess() {
-	request, err := s.httpClient.PostWith("posts", Todo{Id: 21})
+	request, err := s.client.PostWith("posts", Todo{Id: 21})
 	require.NoError(s.T(), err)
 
-	response, err := s.httpClient.Do(request)
+	response, err := s.client.Do(request)
 	require.NoError(s.T(), err)
 
 	var got Todo
@@ -95,16 +95,16 @@ func (s *TestSuite) Test_PostRequestWith_ReturnsSuccess() {
 
 func (s *TestSuite) Test_PostRequestWith_WhenRequestIsInvalid_ReturnsError() {
 	invalidBody := make(chan int)
-	request, err := s.httpClient.PostWith("posts", &invalidBody)
+	request, err := s.client.PostWith("posts", &invalidBody)
 	require.Nil(s.T(), request)
 	require.Error(s.T(), err)
 }
 
 func (s *TestSuite) Test_PutRequest_ReturnsSuccess() {
-	request, err := s.httpClient.Put("posts/30")
+	request, err := s.client.Put("posts/30")
 	require.NoError(s.T(), err)
 
-	response, err := s.httpClient.Do(request)
+	response, err := s.client.Do(request)
 	require.NoError(s.T(), err)
 
 	var got Todo
@@ -116,10 +116,10 @@ func (s *TestSuite) Test_PutRequest_ReturnsSuccess() {
 }
 
 func (s *TestSuite) Test_PutRequestWith_ReturnsSuccess() {
-	request, err := s.httpClient.PutWith("posts/31", Todo{Id: 31})
+	request, err := s.client.PutWith("posts/31", Todo{Id: 31})
 	require.NoError(s.T(), err)
 
-	response, err := s.httpClient.Do(request)
+	response, err := s.client.Do(request)
 	require.NoError(s.T(), err)
 
 	var got Todo
@@ -132,16 +132,16 @@ func (s *TestSuite) Test_PutRequestWith_ReturnsSuccess() {
 
 func (s *TestSuite) Test_PRequestWith_WhenRequestIsInvalid_ReturnsError() {
 	invalidBody := make(chan int)
-	request, err := s.httpClient.PutWith("posts", &invalidBody)
+	request, err := s.client.PutWith("posts", &invalidBody)
 	require.Nil(s.T(), request)
 	require.Error(s.T(), err)
 }
 
 func (s *TestSuite) Test_PatchRequest_ReturnsSuccess() {
-	request, err := s.httpClient.Patch("posts/40")
+	request, err := s.client.Patch("posts/40")
 	require.NoError(s.T(), err)
 
-	response, err := s.httpClient.Do(request)
+	response, err := s.client.Do(request)
 	require.NoError(s.T(), err)
 
 	var got Todo
@@ -153,10 +153,10 @@ func (s *TestSuite) Test_PatchRequest_ReturnsSuccess() {
 }
 
 func (s *TestSuite) Test_PatchRequestWith_ReturnsSuccess() {
-	request, err := s.httpClient.PatchWith("posts/41", Todo{Id: 41})
+	request, err := s.client.PatchWith("posts/41", Todo{Id: 41})
 	require.NoError(s.T(), err)
 
-	response, err := s.httpClient.Do(request)
+	response, err := s.client.Do(request)
 	require.NoError(s.T(), err)
 
 	var got Todo
@@ -169,26 +169,26 @@ func (s *TestSuite) Test_PatchRequestWith_ReturnsSuccess() {
 
 func (s *TestSuite) Test_PatchRequestWith_WhenRequestIsInvalid_ReturnsError() {
 	invalidBody := make(chan int)
-	request, err := s.httpClient.PatchWith("posts", &invalidBody)
+	request, err := s.client.PatchWith("posts", &invalidBody)
 	require.Nil(s.T(), request)
 	require.Error(s.T(), err)
 }
 
 func (s *TestSuite) Test_DeleteRequest_ReturnsSuccess() {
-	request, err := s.httpClient.Delete("posts/50")
+	request, err := s.client.Delete("posts/50")
 	require.NoError(s.T(), err)
 
-	response, err := s.httpClient.Do(request)
+	response, err := s.client.Do(request)
 	require.NoError(s.T(), err)
 
 	require.Equal(s.T(), http.StatusOK, response.Get().StatusCode)
 }
 
 func (s *TestSuite) Test_DeleteRequestWith_ReturnsSuccess() {
-	request, err := s.httpClient.DeleteWith("posts/51", Todo{Id: 51})
+	request, err := s.client.DeleteWith("posts/51", Todo{Id: 51})
 	require.NoError(s.T(), err)
 
-	response, err := s.httpClient.Do(request)
+	response, err := s.client.Do(request)
 	require.NoError(s.T(), err)
 
 	require.Equal(s.T(), http.StatusOK, response.Get().StatusCode)
@@ -196,7 +196,7 @@ func (s *TestSuite) Test_DeleteRequestWith_ReturnsSuccess() {
 
 func (s *TestSuite) Test_DeleteRequestWith_WhenRequestIsInvalid_ReturnsError() {
 	invalidBody := make(chan int)
-	request, err := s.httpClient.DeleteWith("posts", &invalidBody)
+	request, err := s.client.DeleteWith("posts", &invalidBody)
 	require.Nil(s.T(), request)
 	require.Error(s.T(), err)
 }
@@ -213,10 +213,10 @@ func (s *TestSuite) Test_DoFunction_WhenMakeRequest_ReturnsError() {
 }
 
 func (s *TestSuite) Test_ToFunction_ReturnsSuccess() {
-	request, err := s.httpClient.Get("posts/10")
+	request, err := s.client.Get("posts/10")
 	require.NoError(s.T(), err)
 
-	response, err := s.httpClient.Do(request)
+	response, err := s.client.Do(request)
 	require.NoError(s.T(), err)
 
 	var got Todo

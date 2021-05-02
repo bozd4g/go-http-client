@@ -2,13 +2,13 @@ package gohttpclient
 
 import "net/http"
 
-// httpClient is a struct who has BaseUrl property
-type httpClient struct {
+// client is a struct who has BaseUrl property
+type client struct {
 	BaseUrl string
 }
 
-// IHttpClient is a interface who calls the methods
-type IHttpClient interface {
+// Client is a interface who calls the methods
+type Client interface {
 	Get(endpoint string) (*http.Request, error)
 	GetWith(endpoint string, params interface{}) (*http.Request, error)
 	Post(endpoint string) (*http.Request, error)
@@ -19,11 +19,11 @@ type IHttpClient interface {
 	PatchWith(endpoint string, params interface{}) (*http.Request, error)
 	Delete(endpoint string) (*http.Request, error)
 	DeleteWith(endpoint string, params interface{}) (*http.Request, error)
-	Do(request *http.Request) (IHttpResponse, error)
+	Do(request *http.Request) (Response, error)
 }
 
-// HttpResponse is a struct who returns after requests
-type HttpResponse struct {
+// ResponseStruct is a struct who returns after requests
+type ResponseStruct struct {
 	Status        string
 	StatusCode    int
 	Header        http.Header
@@ -31,8 +31,8 @@ type HttpResponse struct {
 	Body          []byte
 }
 
-// IHttpResponse is an interface of HttpResponse struct
-type IHttpResponse interface {
-	Get() HttpResponse
+// Response is an interface of ResponseStruct struct
+type Response interface {
+	Get() ResponseStruct
 	To(value interface{})
 }

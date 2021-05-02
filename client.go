@@ -9,18 +9,18 @@ import (
 	"net/http"
 )
 
-// New func returns a IHttpClient interface
-func New(baseUrl string) IHttpClient {
-	return &httpClient{BaseUrl: baseUrl}
+// New func returns a Client interface
+func New(baseUrl string) Client {
+	return &client{BaseUrl: baseUrl}
 }
 
 // Get func returns a request
-func (h httpClient) Get(endpoint string) (*http.Request, error) {
+func (h client) Get(endpoint string) (*http.Request, error) {
 	return http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s", h.BaseUrl, endpoint), bytes.NewBuffer([]byte{}))
 }
 
 // GetWith func returns a request
-func (h httpClient) GetWith(endpoint string, params interface{}) (*http.Request, error) {
+func (h client) GetWith(endpoint string, params interface{}) (*http.Request, error) {
 	queryString, err := query.Values(params)
 	if err != nil {
 		return nil, err
@@ -30,12 +30,12 @@ func (h httpClient) GetWith(endpoint string, params interface{}) (*http.Request,
 }
 
 // Post func returns a request
-func (h httpClient) Post(endpoint string) (*http.Request, error) {
+func (h client) Post(endpoint string) (*http.Request, error) {
 	return http.NewRequest(http.MethodPost, h.BaseUrl+endpoint, bytes.NewBuffer([]byte{}))
 }
 
 // PostWith func returns a request
-func (h httpClient) PostWith(endpoint string, params interface{}) (*http.Request, error) {
+func (h client) PostWith(endpoint string, params interface{}) (*http.Request, error) {
 	json, err := json.Marshal(params)
 	if err != nil {
 		return nil, err
@@ -45,12 +45,12 @@ func (h httpClient) PostWith(endpoint string, params interface{}) (*http.Request
 }
 
 // Put func returns a request
-func (h httpClient) Put(endpoint string) (*http.Request, error) {
+func (h client) Put(endpoint string) (*http.Request, error) {
 	return http.NewRequest(http.MethodPut, h.BaseUrl+endpoint, bytes.NewBuffer([]byte{}))
 }
 
 // PutWith func returns a request
-func (h httpClient) PutWith(endpoint string, params interface{}) (*http.Request, error) {
+func (h client) PutWith(endpoint string, params interface{}) (*http.Request, error) {
 	json, err := json.Marshal(params)
 	if err != nil {
 		return nil, err
@@ -60,12 +60,12 @@ func (h httpClient) PutWith(endpoint string, params interface{}) (*http.Request,
 }
 
 // Patch func returns a request
-func (h httpClient) Patch(endpoint string) (*http.Request, error) {
+func (h client) Patch(endpoint string) (*http.Request, error) {
 	return http.NewRequest(http.MethodPatch, h.BaseUrl+endpoint, bytes.NewBuffer([]byte{}))
 }
 
 // PatchWith func returns a request
-func (h httpClient) PatchWith(endpoint string, params interface{}) (*http.Request, error) {
+func (h client) PatchWith(endpoint string, params interface{}) (*http.Request, error) {
 	json, err := json.Marshal(params)
 	if err != nil {
 		return nil, err
@@ -75,12 +75,12 @@ func (h httpClient) PatchWith(endpoint string, params interface{}) (*http.Reques
 }
 
 // Delete func returns a request
-func (h httpClient) Delete(endpoint string) (*http.Request, error) {
+func (h client) Delete(endpoint string) (*http.Request, error) {
 	return http.NewRequest(http.MethodDelete, h.BaseUrl+endpoint, bytes.NewBuffer([]byte{}))
 }
 
 // DeleteWith func returns a request
-func (h httpClient) DeleteWith(endpoint string, params interface{}) (*http.Request, error) {
+func (h client) DeleteWith(endpoint string, params interface{}) (*http.Request, error) {
 	json, err := json.Marshal(params)
 	if err != nil {
 		return nil, err
@@ -90,7 +90,7 @@ func (h httpClient) DeleteWith(endpoint string, params interface{}) (*http.Reque
 }
 
 // Do func returns a response with your data
-func (h httpClient) Do(request *http.Request) (IHttpResponse, error) {
+func (h client) Do(request *http.Request) (Response, error) {
 	client := &http.Client{}
 	response, err := client.Do(request)
 	if err != nil {
@@ -104,7 +104,7 @@ func (h httpClient) Do(request *http.Request) (IHttpResponse, error) {
 		return nil, err
 	}
 
-	return &HttpResponse{
+	return &ResponseStruct{
 		Status:        response.Status,
 		StatusCode:    response.StatusCode,
 		Header:        response.Header,
@@ -113,13 +113,13 @@ func (h httpClient) Do(request *http.Request) (IHttpResponse, error) {
 	}, nil
 }
 
-// Get func returns HttpResponse struct of request
-func (r HttpResponse) Get() HttpResponse {
+// Get func returns ResponseStruct struct of request
+func (r ResponseStruct) Get() ResponseStruct {
 	return r
 }
 
 // To func returns converts string to struct
-func (r HttpResponse) To(value interface{}) {
+func (r ResponseStruct) To(value interface{}) {
 	err := json.Unmarshal(r.Body, &value)
 	if err != nil {
 		value = nil

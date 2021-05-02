@@ -99,7 +99,7 @@ You can call these functions from your application.
 | PutWith(endpoint string, params interface{})    | Yes        |
 | Delete(endpoint string)                                   | - |
 | DeleteWith(endpoint string, params interface{}) | Yes         |
-| Do() (IHttpResponse, error) | - |
+| Do() (Response, error) | - |
 | To(value interface{}) | - |
 
 # License
