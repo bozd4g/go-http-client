@@ -74,7 +74,7 @@ func main() {
     // or  
     var todo2 Todo     
     response, err = httpClient.Do(request)
-    if err != nil {
+    if err == nil {
         response.To(&todo2)
         fmt.Println(todo2.Title) // Lorem ipsum dolor sit amet
     } else {
