@@ -42,3 +42,7 @@ func (r *Response) Cookies() []*http.Cookie {
 func (r *Response) Ok() bool {
 	return r.httpResponse.StatusCode >= 200 && r.httpResponse.StatusCode <= 299
 }
+
+func (r *Response) Get() *http.Response {
+	return r.httpResponse
+}
