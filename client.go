@@ -2,126 +2,152 @@ package gohttpclient
 
 import (
 	"bytes"
-	"encoding/json"
+	"context"
 	"fmt"
-	"github.com/google/go-querystring/query"
-	"io/ioutil"
 	"net/http"
+	"time"
 )
 
-// New func returns a Client interface
-func New(baseUrl string) Client {
-	return &client{BaseUrl: baseUrl}
+type (
+	// Client is a struct who has BaseUrl property
+	Client struct {
+		httpClient *http.Client
+		baseUrl    string
+		headers    map[string]Header
+		query      map[string]string
+		body       []byte
+		timeout    time.Duration
+	}
+
+	// Clienter is a interface who calls the methods
+	Clienter interface{}
+
+	Header struct {
+		Value     string
+		IsDefault bool
+	}
+)
+
+// New func returns a Client struct
+func New(baseUrl string, opts ...ClientOption) *Client {
+	defaultTimeout := 3 * time.Second
+	httpClient := &http.Client{Timeout: defaultTimeout}
+
+	return &Client{httpClient: httpClient, baseUrl: baseUrl, timeout: defaultTimeout}
 }
 
 // Get func returns a request
-func (h client) Get(endpoint string) (*http.Request, error) {
-	return http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s", h.BaseUrl, endpoint), bytes.NewBuffer([]byte{}))
-}
+func (c *Client) Get(ctx context.Context, endpoint string, opts ...Option) (*Response, error) {
+	clear := c.initOpts(opts...)
+	defer clear()
 
-// GetWith func returns a request
-func (h client) GetWith(endpoint string, params interface{}) (*http.Request, error) {
-	queryString, err := query.Values(params)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s", c.baseUrl, endpoint), bytes.NewBuffer(nil))
 	if err != nil {
 		return nil, err
 	}
 
-	return http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s?%s", h.BaseUrl, endpoint, queryString.Encode()), bytes.NewBuffer([]byte{}))
+	prepReq := c.prepareReq(req)
+	return c.sendReq(ctx, prepReq)
 }
 
 // Post func returns a request
-func (h client) Post(endpoint string) (*http.Request, error) {
-	return http.NewRequest(http.MethodPost, h.BaseUrl+endpoint, bytes.NewBuffer([]byte{}))
-}
+func (c *Client) Post(ctx context.Context, endpoint string, opts ...Option) (*Response, error) {
+	clear := c.initOpts(opts...)
+	defer clear()
 
-// PostWith func returns a request
-func (h client) PostWith(endpoint string, params interface{}) (*http.Request, error) {
-	json, err := json.Marshal(params)
+	req, err := http.NewRequest(http.MethodPost, c.baseUrl+endpoint, bytes.NewBuffer(c.body))
 	if err != nil {
 		return nil, err
 	}
 
-	return http.NewRequest(http.MethodPost, h.BaseUrl+endpoint, bytes.NewBuffer(json))
+	prepReq := c.prepareReq(req)
+	return c.sendReq(ctx, prepReq)
+
 }
 
 // Put func returns a request
-func (h client) Put(endpoint string) (*http.Request, error) {
-	return http.NewRequest(http.MethodPut, h.BaseUrl+endpoint, bytes.NewBuffer([]byte{}))
-}
+func (c *Client) Put(ctx context.Context, endpoint string, opts ...Option) (*Response, error) {
+	clear := c.initOpts(opts...)
+	defer clear()
 
-// PutWith func returns a request
-func (h client) PutWith(endpoint string, params interface{}) (*http.Request, error) {
-	json, err := json.Marshal(params)
+	req, err := http.NewRequest(http.MethodPut, c.baseUrl+endpoint, bytes.NewBuffer([]byte{}))
 	if err != nil {
 		return nil, err
 	}
 
-	return http.NewRequest(http.MethodPut, h.BaseUrl+endpoint, bytes.NewBuffer(json))
+	prepReq := c.prepareReq(req)
+	return c.sendReq(ctx, prepReq)
 }
 
 // Patch func returns a request
-func (h client) Patch(endpoint string) (*http.Request, error) {
-	return http.NewRequest(http.MethodPatch, h.BaseUrl+endpoint, bytes.NewBuffer([]byte{}))
-}
+func (c *Client) Patch(ctx context.Context, endpoint string, opts ...Option) (*Response, error) {
+	clear := c.initOpts(opts...)
+	defer clear()
 
-// PatchWith func returns a request
-func (h client) PatchWith(endpoint string, params interface{}) (*http.Request, error) {
-	json, err := json.Marshal(params)
+	req, err := http.NewRequest(http.MethodPatch, c.baseUrl+endpoint, bytes.NewBuffer([]byte{}))
 	if err != nil {
 		return nil, err
 	}
 
-	return http.NewRequest(http.MethodPatch, h.BaseUrl+endpoint, bytes.NewBuffer(json))
+	prepReq := c.prepareReq(req)
+	return c.sendReq(ctx, prepReq)
 }
 
 // Delete func returns a request
-func (h client) Delete(endpoint string) (*http.Request, error) {
-	return http.NewRequest(http.MethodDelete, h.BaseUrl+endpoint, bytes.NewBuffer([]byte{}))
-}
+func (c *Client) Delete(ctx context.Context, endpoint string, opts ...Option) (*Response, error) {
+	clear := c.initOpts(opts...)
+	defer clear()
 
-// DeleteWith func returns a request
-func (h client) DeleteWith(endpoint string, params interface{}) (*http.Request, error) {
-	json, err := json.Marshal(params)
+	req, err := http.NewRequest(http.MethodDelete, c.baseUrl+endpoint, bytes.NewBuffer([]byte{}))
 	if err != nil {
 		return nil, err
 	}
 
-	return http.NewRequest(http.MethodDelete, h.BaseUrl+endpoint, bytes.NewBuffer(json))
+	prepReq := c.prepareReq(req)
+	return c.sendReq(ctx, prepReq)
 }
 
-// Do func returns a response with your data
-func (h client) Do(request *http.Request) (Response, error) {
-	client := &http.Client{}
-	response, err := client.Do(request)
+func (c *Client) initOpts(opts ...Option) func() {
+	for _, opt := range opts {
+		opt(c)
+	}
+
+	return func() {
+		for key, header := range c.headers {
+			if !header.IsDefault {
+				delete(c.headers, key)
+			}
+		}
+
+		c.query = make(map[string]string)
+		c.body = nil
+	}
+}
+
+func (c *Client) prepareReq(req *http.Request) *http.Request {
+	// set headers
+	for key, header := range c.headers {
+		req.Header.Set(key, header.Value)
+	}
+
+	// set query
+	q := req.URL.Query()
+	for key, value := range c.query {
+		q.Add(key, value)
+	}
+
+	req.URL.RawQuery = q.Encode()
+	return req
+}
+
+func (c *Client) sendReq(ctx context.Context, req *http.Request) (*Response, error) {
+	reqCtx, cancel := context.WithTimeout(ctx, c.timeout)
+	defer cancel()
+
+	res, err := c.httpClient.Do(req.WithContext(reqCtx))
 	if err != nil {
 		return nil, err
 	}
 
-	defer response.Body.Close()
-
-	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return &ResponseStruct{
-		Status:        response.Status,
-		StatusCode:    response.StatusCode,
-		Header:        response.Header,
-		ContentLength: response.ContentLength,
-		Body:          body,
-	}, nil
-}
-
-// Get func returns ResponseStruct struct of request
-func (r ResponseStruct) Get() ResponseStruct {
-	return r
-}
-
-// To func returns converts string to struct
-func (r ResponseStruct) To(value interface{}) {
-	err := json.Unmarshal(r.Body, &value)
-	if err != nil {
-		value = nil
-	}
+	return &Response{httpResponse: res}, nil
 }
