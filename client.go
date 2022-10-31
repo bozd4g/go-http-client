@@ -3,7 +3,6 @@ package gohttpclient
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -41,7 +40,7 @@ func (c *Client) Get(ctx context.Context, endpoint string, opts ...Option) (*Res
 	clear := c.initOpts(opts...)
 	defer clear()
 
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s%s", c.baseUrl, endpoint), bytes.NewBuffer(nil))
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.baseUrl+endpoint, bytes.NewBuffer(nil))
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +54,7 @@ func (c *Client) Post(ctx context.Context, endpoint string, opts ...Option) (*Re
 	clear := c.initOpts(opts...)
 	defer clear()
 
-	req, err := http.NewRequest(http.MethodPost, c.baseUrl+endpoint, bytes.NewBuffer(c.body))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.baseUrl+endpoint, bytes.NewBuffer(c.body))
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +69,7 @@ func (c *Client) Put(ctx context.Context, endpoint string, opts ...Option) (*Res
 	clear := c.initOpts(opts...)
 	defer clear()
 
-	req, err := http.NewRequest(http.MethodPut, c.baseUrl+endpoint, bytes.NewBuffer([]byte{}))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPut, c.baseUrl+endpoint, bytes.NewBuffer(c.body))
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +83,7 @@ func (c *Client) Patch(ctx context.Context, endpoint string, opts ...Option) (*R
 	clear := c.initOpts(opts...)
 	defer clear()
 
-	req, err := http.NewRequest(http.MethodPatch, c.baseUrl+endpoint, bytes.NewBuffer([]byte{}))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPatch, c.baseUrl+endpoint, bytes.NewBuffer(c.body))
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +97,7 @@ func (c *Client) Delete(ctx context.Context, endpoint string, opts ...Option) (*
 	clear := c.initOpts(opts...)
 	defer clear()
 
-	req, err := http.NewRequest(http.MethodDelete, c.baseUrl+endpoint, bytes.NewBuffer([]byte{}))
+	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, c.baseUrl+endpoint, bytes.NewBuffer(c.body))
 	if err != nil {
 		return nil, err
 	}
