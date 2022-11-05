@@ -17,6 +17,7 @@ type TestSuite struct {
 type TestMethod struct {
 	Name, BaseUrl string
 	Method        func(ctx context.Context, endpoint string, opts ...Option) (*Response, error)
+	options       []Option
 }
 
 func TestInit(t *testing.T) {
@@ -173,6 +174,60 @@ func (s *TestSuite) Test_Request_ShouldRunSuccesfully() {
 		s.Suite.Run(req.Name, func() {
 			// Act
 			response, err := req.Method(s.ctx, "")
+
+			// Assert
+			s.NotNil(response)
+			s.NoError(err)
+		})
+	}
+}
+
+func (s *TestSuite) Test_Request_WithOptions_ShouldRunSuccesfully() {
+	// Arrange
+	// init test server
+	svc := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+	defer svc.Close()
+
+	client := New(svc.URL)
+	requests := []TestMethod{
+		{
+			Name:    "GET",
+			BaseUrl: svc.URL,
+			Method:  client.Get,
+			options: []Option{WithHeader("key", "value"), WithQuery("key", "value")},
+		},
+		{
+			Name:    "POST",
+			BaseUrl: svc.URL,
+			Method:  client.Post,
+			options: []Option{WithHeader("key", "value"), WithQuery("key", "value")},
+		},
+		{
+			Name:    "PUT",
+			BaseUrl: svc.URL,
+			Method:  client.Put,
+			options: []Option{WithHeader("key", "value"), WithQuery("key", "value")},
+		},
+		{
+			Name:    "PATCH",
+			BaseUrl: svc.URL,
+			Method:  client.Patch,
+			options: []Option{WithHeader("key", "value"), WithQuery("key", "value")},
+		},
+		{
+			Name:    "DELETE",
+			BaseUrl: svc.URL,
+			Method:  client.Delete,
+			options: []Option{WithHeader("key", "value"), WithQuery("key", "value")},
+		},
+	}
+
+	for _, req := range requests {
+		s.Suite.Run(req.Name, func() {
+			// Act
+			response, err := req.Method(s.ctx, "", req.options...)
 
 			// Assert
 			s.NotNil(response)
