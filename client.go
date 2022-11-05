@@ -10,12 +10,13 @@ import (
 type (
 	// Client is a struct who has BaseUrl property
 	Client struct {
+		baseUrl string
+		headers map[string]Header
+		query   map[string]string
+		body    []byte
+		timeout time.Duration
+
 		httpClient *http.Client
-		baseUrl    string
-		headers    map[string]Header
-		query      map[string]string
-		body       []byte
-		timeout    time.Duration
 	}
 
 	// Clienter is a interface who calls the methods
@@ -104,6 +105,18 @@ func (c *Client) Delete(ctx context.Context, endpoint string, opts ...Option) (*
 
 	prepReq := c.prepareReq(req)
 	return c.sendReq(ctx, prepReq)
+}
+
+func (c *Client) PrepareRequest(ctx context.Context, method, endpoint string, opts ...Option) (*http.Request, error) {
+	clear := c.initOpts(opts...)
+	defer clear()
+
+	req, err := http.NewRequestWithContext(ctx, method, c.baseUrl+endpoint, bytes.NewBuffer(c.body))
+	if err != nil {
+		return nil, err
+	}
+
+	return c.prepareReq(req), nil
 }
 
 func (c *Client) initOpts(opts ...Option) func() {

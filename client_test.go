@@ -2,6 +2,7 @@ package gohttpclient
 
 import (
 	"context"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -9,7 +10,7 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-type TestSuite struct {
+type TestClientSuite struct {
 	suite.Suite
 	ctx context.Context
 }
@@ -20,21 +21,15 @@ type TestMethod struct {
 	options       []Option
 }
 
-func TestInit(t *testing.T) {
-	suite.Run(t, new(TestSuite))
+func TestClient(t *testing.T) {
+	suite.Run(t, new(TestClientSuite))
 }
 
-func (s *TestSuite) SetupSuite() {
+func (s *TestClientSuite) SetupSuite() {
 	s.ctx = context.Background()
 }
 
-func (s *TestSuite) TearDownSuite() {}
-
-func (s *TestSuite) SetupTest() {}
-
-func (s *TestSuite) TearDownTest() {}
-
-func (s *TestSuite) Test_New_ShouldRunSuccesfully() {
+func (s *TestClientSuite) Test_New_ShouldRunSuccesfully() {
 	// Arrange
 	baseUrl := "http://localhost:8080"
 
@@ -45,7 +40,7 @@ func (s *TestSuite) Test_New_ShouldRunSuccesfully() {
 	s.NotNil(client)
 }
 
-func (s *TestSuite) Test_Request_WhenRequestIsInvalid_ShouldReturnError() {
+func (s *TestClientSuite) Test_Request_WhenRequestIsInvalid_ShouldReturnError() {
 	// Arrange
 	baseUrl := "http://localhost:8080"
 	client := New(baseUrl)
@@ -89,7 +84,7 @@ func (s *TestSuite) Test_Request_WhenRequestIsInvalid_ShouldReturnError() {
 	}
 }
 
-func (s *TestSuite) Test_Request_WhenDoReturnsAnError_ShouldReturnError() {
+func (s *TestClientSuite) Test_Request_WhenDoReturnsAnError_ShouldReturnError() {
 	// Arrange
 	baseUrlWithInvalidSchema := "htt \\`"
 	client := New(baseUrlWithInvalidSchema)
@@ -133,7 +128,7 @@ func (s *TestSuite) Test_Request_WhenDoReturnsAnError_ShouldReturnError() {
 	}
 }
 
-func (s *TestSuite) Test_Request_ShouldRunSuccesfully() {
+func (s *TestClientSuite) Test_Request_ShouldRunSuccesfully() {
 	// Arrange
 	// init test server
 	svc := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -182,7 +177,7 @@ func (s *TestSuite) Test_Request_ShouldRunSuccesfully() {
 	}
 }
 
-func (s *TestSuite) Test_Request_WithOptions_ShouldRunSuccesfully() {
+func (s *TestClientSuite) Test_Request_WithOptions_ShouldRunSuccesfully() {
 	// Arrange
 	// init test server
 	svc := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -234,4 +229,26 @@ func (s *TestSuite) Test_Request_WithOptions_ShouldRunSuccesfully() {
 			s.NoError(err)
 		})
 	}
+}
+
+func (s *TestClientSuite) Test_PrepareRequest_ShouldRunSuccesfully() {
+	// Arrange
+	baseUrl := "http://localhost:8080"
+	method := "GET"
+	endpoint := "/test"
+	body := []byte("test")
+	client := New(baseUrl)
+
+	// Act
+	request, err := client.PrepareRequest(s.ctx, method, endpoint, WithBody(body))
+
+	// Assert
+	s.NoError(err)
+	s.NotNil(request)
+	s.Equal(method, request.Method)
+	s.Equal(baseUrl+endpoint, request.URL.String())
+
+	requestBody, err := ioutil.ReadAll(request.Body)
+	s.NoError(err)
+	s.Equal(body, requestBody)
 }
