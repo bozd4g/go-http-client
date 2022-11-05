@@ -9,13 +9,13 @@ type (
 
 func WithDefaultHeaders() ClientOption {
 	return func(c *Client) {
+		if c.headers == nil {
+			c.headers = make(map[string]Header)
+		}
+
 		c.headers["Content-Type"] = Header{Value: "application/json", IsDefault: true}
 		c.headers["Accept"] = Header{Value: "application/json", IsDefault: true}
 	}
-}
-
-func WithLogger() ClientOption {
-	return func(c *Client) {}
 }
 
 func WithTimeout(timeout time.Duration) ClientOption {
