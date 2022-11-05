@@ -16,7 +16,8 @@ type (
 		body    []byte
 		timeout time.Duration
 
-		httpClient *http.Client
+		httpClient  *http.Client
+		defaultOpts []ClientOption
 	}
 
 	// Clienter is a interface who calls the methods
@@ -32,8 +33,13 @@ type (
 func New(baseUrl string, opts ...ClientOption) *Client {
 	defaultTimeout := 3 * time.Second
 	httpClient := &http.Client{Timeout: defaultTimeout}
+	client := &Client{httpClient: httpClient, baseUrl: baseUrl, timeout: defaultTimeout}
 
-	return &Client{httpClient: httpClient, baseUrl: baseUrl, timeout: defaultTimeout}
+	for _, opt := range opts {
+		opt(client)
+	}
+
+	return client
 }
 
 // Get func returns a request
@@ -107,6 +113,7 @@ func (c *Client) Delete(ctx context.Context, endpoint string, opts ...Option) (*
 	return c.sendReq(ctx, prepReq)
 }
 
+// PrepareRequest func returns a request
 func (c *Client) PrepareRequest(ctx context.Context, method, endpoint string, opts ...Option) (*http.Request, error) {
 	clear := c.initOpts(opts...)
 	defer clear()

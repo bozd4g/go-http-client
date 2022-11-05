@@ -231,6 +231,21 @@ func (s *TestClientSuite) Test_Request_WithOptions_ShouldRunSuccesfully() {
 	}
 }
 
+func (s *TestClientSuite) Test_PrepareRequest_WhenRequestIsInvalid_ShouldReturnError() {
+	// Arrange
+	baseUrl := "http://localhost:8080"
+	method := "GET"
+	endpoint := "/test"
+	client := New(baseUrl)
+
+	// Act
+	response, err := client.PrepareRequest(nil, method, endpoint)
+
+	// Assert
+	s.Nil(response)
+	s.Error(err)
+}
+
 func (s *TestClientSuite) Test_PrepareRequest_ShouldRunSuccesfully() {
 	// Arrange
 	baseUrl := "http://localhost:8080"
