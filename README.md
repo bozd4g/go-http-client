@@ -31,78 +31,46 @@
 
 This package provides you a http client package for your http requests. You can send requests quicly with this package. If you want to contribute this package, please fork and [create](https://github.com/bozd4g/go-http-client/pulls) a pull request.
 
-# Installation
+## Installation
 ```
 $ go get -u github.com/bozd4g/go-http-client/
 ```
 
-# Usage
+## Example Usage
 ```go
+package main
+
 import (
-	"encoding/json"
-	"fmt"
-	client "github.com/bozd4g/go-http-client"
+	"context"
+	"log"
+
+	gohttpclient "github.com/bozd4g/go-http-client"
 )
 
-type Todo struct {
-    Id        int
-    UserId    int
-    Title     string
-    Completed bool
+type Post struct {
+	ID    int    `json:"id"`
+	Title string `json:"title"`
 }
 
 func main() {
-    httpClient := client.New("https://jsonplaceholder.typicode.com/")
-    request, err := httpClient.Get("posts/10")
-    
-    if err != nil {
-        panic(err)
-    }
-    
-    response, err := httpClient.Do(request)
-    if err != nil {
-        panic(err)
-    }
-    
-    var todo Todo
-    err = json.Unmarshal(response.Get().Body, &todo)
-    if err != nil {
-        panic(err)
-    }
-    fmt.Println(todo.Title) // Lorem ipsum dolor sit amet
+	ctx := context.Background()
+	client := gohttpclient.New("https://jsonplaceholder.typicode.com")
 
-    // or  
-    var todo2 Todo     
-    response, err = httpClient.Do(request)
-    if err == nil {
-        response.To(&todo2)
-        fmt.Println(todo2.Title) // Lorem ipsum dolor sit amet
-    } else {
-        fmt.Println(err.Error())
-    }
+	response, err := client.Get(ctx, "/posts/1")
+	if err != nil {
+		log.Fatalf("error: %v", err)
+	}
+
+	var post Post
+	if err := response.Json(&post); err != nil {
+		log.Fatalf("error: %v", err)
+	}
+
+	log.Printf(post.Title) // sunt aut facere repellat provident occaecati...
 }
-
 ```
 
-## Functions
-You can call these functions from your application.
-
-| Function                                                  | Has Params |
-| --------------------------------------------------------- | ---------- |
-| Get(endpoint string)                                      | - |
-| GetWith(endpoint string, params interface {})   | Yes        |
-| Post(endpoint string)                                     | - |
-| PostWith(endpoint string, params interface {})  | Yes        |
-| Patch(endpoint string)                                      | - |
-| PatchWith(endpoint string, params interface{})    | Yes        |
-| Put(endpoint string)                                      | - |
-| PutWith(endpoint string, params interface{})    | Yes        |
-| Delete(endpoint string)                                   | - |
-| DeleteWith(endpoint string, params interface{}) | Yes         |
-| Do() (Response, error) | - |
-| To(value interface{}) | - |
-
-# License
+## License
 Copyright (c) 2020 Furkan Bozdag
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
