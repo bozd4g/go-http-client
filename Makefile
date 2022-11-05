@@ -1,6 +1,9 @@
 test:
 	@go test $(go list ./... | grep -v /example/)
 
+cov:
+	@go test -coverprofile=coverage.txt -covermode=atomic $(go list ./... | grep -v /example/)
+
 coverage:
-	@go test -coverprofile=coverage.out $(go list ./... | grep -v /example/)
-	@go tool cover -html=coverage.out
+	$(MAKE) cov
+	@go tool cover -html=coverage.txt
