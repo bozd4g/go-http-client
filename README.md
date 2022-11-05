@@ -19,7 +19,7 @@
 
 <p align="center">
   <a href="https://bozd4g.mit-license.org/"><img src="https://img.shields.io/badge/License-MIT-blue.svg"></a>
-  <a href="https://travis-ci.org/bozd4g/go-http-client"><img src="https://travis-ci.org/bozd4g/go-http-client.svg?branch=master"></a>
+  <a href="https://github.com/bozd4g/go-http-client/actions/workflows/build.yml"><img src="https://github.com/bozd4g/go-http-client/actions/workflows/build.yml/badge.svg"></a>
   <a href="https://goreportcard.com/report/github.com/bozd4g/go-http-client"><img src="https://goreportcard.com/badge/github.com/bozd4g/go-http-client"></a>
 <a href="https://codecov.io/gh/bozd4g/go-http-client">
 <img alt="Coverage" src="https://codecov.io/gh/bozd4g/go-http-client/branch/master/graphs/badge.svg?branch=master">
