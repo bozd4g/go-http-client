@@ -1,6 +1,6 @@
 #custom
-yarn.lock
 .env
+coverage.out
 
 # globs
 Makefile.in
