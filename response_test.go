@@ -75,7 +75,7 @@ func (s *TestResponseSuite) Test_Body_ShouldReturnError() {
 	s.Error(err)
 }
 
-func (s *TestResponseSuite) Test_Json_ShouldRunSuccesfully() {
+func (s *TestResponseSuite) Test_Unmarshal_ShouldRunSuccesfully() {
 	// Arrange
 	body := []byte(`{"name":"test"}`)
 
@@ -88,12 +88,12 @@ func (s *TestResponseSuite) Test_Json_ShouldRunSuccesfully() {
 
 	// Assert
 	var response map[string]interface{}
-	err := resp.Json(&response)
+	err := resp.Unmarshal(&response)
 	s.NoError(err)
 	s.Equal("test", response["name"])
 }
 
-func (s *TestResponseSuite) Test_Json_WhenBodyIsWrong_ShouldReturnError() {
+func (s *TestResponseSuite) Test_Unmarshal_WhenBodyIsWrong_ShouldReturnError() {
 	// Arrange
 	mockReadCloser := mockReadCloser{}
 	mockReadCloser.On("Read", mock.AnythingOfType("[]uint8")).Return(0, fmt.Errorf("error reading"))
@@ -107,13 +107,13 @@ func (s *TestResponseSuite) Test_Json_WhenBodyIsWrong_ShouldReturnError() {
 
 	// Act
 	var response map[string]interface{}
-	err := resp.Json(&response)
+	err := resp.Unmarshal(&response)
 
 	// Assert
 	s.Errorf(err, "error reading")
 }
 
-func (s *TestResponseSuite) Test_Json_WhenUnMarshalReturnsError_ShouldReturnError() {
+func (s *TestResponseSuite) Test_Unmarshal_WhenUnMarshalReturnsError_ShouldReturnError() {
 	// Arrange
 	body := []byte(`{"name":"test"`)
 
@@ -126,7 +126,7 @@ func (s *TestResponseSuite) Test_Json_WhenUnMarshalReturnsError_ShouldReturnErro
 
 	// Assert
 	var response map[string]interface{}
-	err := resp.Json(&response)
+	err := resp.Unmarshal(&response)
 	s.Error(err)
 }
 

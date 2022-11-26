@@ -17,7 +17,7 @@ func (r *Response) Body() ([]byte, error) {
 	return ioutil.ReadAll(r.httpResponse.Body)
 }
 
-func (r *Response) Json(v any) error {
+func (r *Response) Unmarshal(v any) error {
 	defer r.httpResponse.Body.Close()
 	body, err := ioutil.ReadAll(r.httpResponse.Body)
 	if err != nil {
