@@ -62,7 +62,7 @@ func main() {
 	}
 
 	var post Post
-	if err := response.Json(&post); err != nil {
+	if err := response.Unmarshal(&post); err != nil {
 		log.Fatalf("error: %v", err)
 	}
 

@@ -29,11 +29,14 @@ type (
 	}
 )
 
+const (
+	DEFAULT_TIMEOUT = 10 * time.Second
+)
+
 // New func returns a Client struct
 func New(baseUrl string, opts ...ClientOption) *Client {
-	defaultTimeout := 3 * time.Second
-	httpClient := &http.Client{Timeout: defaultTimeout}
-	client := &Client{httpClient: httpClient, baseUrl: baseUrl, timeout: defaultTimeout}
+	httpClient := &http.Client{Timeout: DEFAULT_TIMEOUT}
+	client := &Client{httpClient: httpClient, baseUrl: baseUrl, timeout: DEFAULT_TIMEOUT}
 
 	for _, opt := range opts {
 		opt(client)
