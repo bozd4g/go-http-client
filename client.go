@@ -13,11 +13,10 @@ type (
 		baseUrl    string
 		httpClient *http.Client
 
-		headers   map[string]Header
-		query     map[string]string
-		body      []byte
-		transport *http.Transport
-		timeout   time.Duration
+		headers map[string]Header
+		query   map[string]string
+		body    []byte
+		timeout time.Duration
 	}
 
 	// Clienter is a interface who calls the methods
