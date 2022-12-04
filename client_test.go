@@ -16,8 +16,8 @@ type TestClientSuite struct {
 }
 
 type TestMethod struct {
-	Name, BaseUrl string
-	Method        func(ctx context.Context, endpoint string, opts ...Option) (*Response, error)
+	name, baseUrl string
+	method        func(ctx context.Context, endpoint string, opts ...Option) (*Response, error)
 	options       []Option
 }
 
@@ -46,36 +46,51 @@ func (s *TestClientSuite) Test_Request_WhenRequestIsInvalid_ShouldReturnError() 
 	client := New(baseUrl)
 	requests := []TestMethod{
 		{
-			Name:    "GET",
-			BaseUrl: baseUrl,
-			Method:  client.Get,
+			name:    "GET",
+			baseUrl: baseUrl,
+			method:  client.Get,
 		},
 		{
-			Name:    "POST",
-			BaseUrl: baseUrl,
-			Method:  client.Post,
+			name:    "POST",
+			baseUrl: baseUrl,
+			method:  client.Post,
 		},
 		{
-			Name:    "PUT",
-			BaseUrl: baseUrl,
-			Method:  client.Put,
+			name:    "PUT",
+			baseUrl: baseUrl,
+			method:  client.Put,
 		},
 		{
-			Name:    "PATCH",
-			BaseUrl: baseUrl,
-			Method:  client.Patch,
+			name:    "PATCH",
+			baseUrl: baseUrl,
+			method:  client.Patch,
 		},
 		{
-			Name:    "DELETE",
-			BaseUrl: baseUrl,
-			Method:  client.Delete,
+			name:    "DELETE",
+			baseUrl: baseUrl,
+			method:  client.Delete,
+		},
+		{
+			name:    "CONNECT",
+			baseUrl: baseUrl,
+			method:  client.Connect,
+		},
+		{
+			name:    "OPTIONS",
+			baseUrl: baseUrl,
+			method:  client.Options,
+		},
+		{
+			name:    "TRACE",
+			baseUrl: baseUrl,
+			method:  client.Trace,
 		},
 	}
 
 	for _, req := range requests {
-		s.Suite.Run(req.Name, func() {
+		s.Suite.Run(req.name, func() {
 			// Act
-			response, err := req.Method(nil, "")
+			response, err := req.method(nil, "")
 
 			// Assert
 			s.Nil(response)
@@ -90,36 +105,51 @@ func (s *TestClientSuite) Test_Request_WhenDoReturnsAnError_ShouldReturnError() 
 	client := New(baseUrlWithInvalidSchema)
 	requests := []TestMethod{
 		{
-			Name:    "GET",
-			BaseUrl: baseUrlWithInvalidSchema,
-			Method:  client.Get,
+			name:    "GET",
+			baseUrl: baseUrlWithInvalidSchema,
+			method:  client.Get,
 		},
 		{
-			Name:    "POST",
-			BaseUrl: baseUrlWithInvalidSchema,
-			Method:  client.Post,
+			name:    "POST",
+			baseUrl: baseUrlWithInvalidSchema,
+			method:  client.Post,
 		},
 		{
-			Name:    "PUT",
-			BaseUrl: baseUrlWithInvalidSchema,
-			Method:  client.Put,
+			name:    "PUT",
+			baseUrl: baseUrlWithInvalidSchema,
+			method:  client.Put,
 		},
 		{
-			Name:    "PATCH",
-			BaseUrl: baseUrlWithInvalidSchema,
-			Method:  client.Patch,
+			name:    "PATCH",
+			baseUrl: baseUrlWithInvalidSchema,
+			method:  client.Patch,
 		},
 		{
-			Name:    "DELETE",
-			BaseUrl: baseUrlWithInvalidSchema,
-			Method:  client.Delete,
+			name:    "DELETE",
+			baseUrl: baseUrlWithInvalidSchema,
+			method:  client.Delete,
+		},
+		{
+			name:    "CONNECT",
+			baseUrl: baseUrlWithInvalidSchema,
+			method:  client.Connect,
+		},
+		{
+			name:    "OPTIONS",
+			baseUrl: baseUrlWithInvalidSchema,
+			method:  client.Options,
+		},
+		{
+			name:    "TRACE",
+			baseUrl: baseUrlWithInvalidSchema,
+			method:  client.Trace,
 		},
 	}
 
 	for _, req := range requests {
-		s.Suite.Run(req.Name, func() {
+		s.Suite.Run(req.name, func() {
 			// Act
-			response, err := req.Method(s.ctx, "")
+			response, err := req.method(s.ctx, "")
 
 			// Assert
 			s.Nil(response)
@@ -139,36 +169,51 @@ func (s *TestClientSuite) Test_Request_ShouldRunSuccesfully() {
 	client := New(svc.URL)
 	requests := []TestMethod{
 		{
-			Name:    "GET",
-			BaseUrl: svc.URL,
-			Method:  client.Get,
+			name:    "GET",
+			baseUrl: svc.URL,
+			method:  client.Get,
 		},
 		{
-			Name:    "POST",
-			BaseUrl: svc.URL,
-			Method:  client.Post,
+			name:    "POST",
+			baseUrl: svc.URL,
+			method:  client.Post,
 		},
 		{
-			Name:    "PUT",
-			BaseUrl: svc.URL,
-			Method:  client.Put,
+			name:    "PUT",
+			baseUrl: svc.URL,
+			method:  client.Put,
 		},
 		{
-			Name:    "PATCH",
-			BaseUrl: svc.URL,
-			Method:  client.Patch,
+			name:    "PATCH",
+			baseUrl: svc.URL,
+			method:  client.Patch,
 		},
 		{
-			Name:    "DELETE",
-			BaseUrl: svc.URL,
-			Method:  client.Delete,
+			name:    "DELETE",
+			baseUrl: svc.URL,
+			method:  client.Delete,
+		},
+		{
+			name:    "CONNECT",
+			baseUrl: svc.URL,
+			method:  client.Connect,
+		},
+		{
+			name:    "OPTIONS",
+			baseUrl: svc.URL,
+			method:  client.Options,
+		},
+		{
+			name:    "TRACE",
+			baseUrl: svc.URL,
+			method:  client.Trace,
 		},
 	}
 
 	for _, req := range requests {
-		s.Suite.Run(req.Name, func() {
+		s.Suite.Run(req.name, func() {
 			// Act
-			response, err := req.Method(s.ctx, "")
+			response, err := req.method(s.ctx, "")
 
 			// Assert
 			s.NotNil(response)
@@ -188,41 +233,59 @@ func (s *TestClientSuite) Test_Request_WithOptions_ShouldRunSuccesfully() {
 	client := New(svc.URL)
 	requests := []TestMethod{
 		{
-			Name:    "GET",
-			BaseUrl: svc.URL,
-			Method:  client.Get,
+			name:    "GET",
+			baseUrl: svc.URL,
+			method:  client.Get,
 			options: []Option{WithHeader("key", "value"), WithQuery("key", "value")},
 		},
 		{
-			Name:    "POST",
-			BaseUrl: svc.URL,
-			Method:  client.Post,
+			name:    "POST",
+			baseUrl: svc.URL,
+			method:  client.Post,
 			options: []Option{WithHeader("key", "value"), WithQuery("key", "value")},
 		},
 		{
-			Name:    "PUT",
-			BaseUrl: svc.URL,
-			Method:  client.Put,
+			name:    "PUT",
+			baseUrl: svc.URL,
+			method:  client.Put,
 			options: []Option{WithHeader("key", "value"), WithQuery("key", "value")},
 		},
 		{
-			Name:    "PATCH",
-			BaseUrl: svc.URL,
-			Method:  client.Patch,
+			name:    "PATCH",
+			baseUrl: svc.URL,
+			method:  client.Patch,
 			options: []Option{WithHeader("key", "value"), WithQuery("key", "value")},
 		},
 		{
-			Name:    "DELETE",
-			BaseUrl: svc.URL,
-			Method:  client.Delete,
+			name:    "DELETE",
+			baseUrl: svc.URL,
+			method:  client.Delete,
+			options: []Option{WithHeader("key", "value"), WithQuery("key", "value")},
+		},
+		{
+			name:    "CONNECT",
+			baseUrl: svc.URL,
+			method:  client.Connect,
+			options: []Option{WithHeader("key", "value"), WithQuery("key", "value")},
+		},
+		{
+			name:    "OPTIONS",
+			baseUrl: svc.URL,
+			method:  client.Options,
+			options: []Option{WithHeader("key", "value"), WithQuery("key", "value")},
+		},
+		{
+			name:    "TRACE",
+			baseUrl: svc.URL,
+			method:  client.Trace,
 			options: []Option{WithHeader("key", "value"), WithQuery("key", "value")},
 		},
 	}
 
 	for _, req := range requests {
-		s.Suite.Run(req.Name, func() {
+		s.Suite.Run(req.name, func() {
 			// Act
-			response, err := req.Method(s.ctx, "", req.options...)
+			response, err := req.method(s.ctx, "", req.options...)
 
 			// Assert
 			s.NotNil(response)

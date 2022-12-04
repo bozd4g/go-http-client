@@ -50,7 +50,7 @@ func (c *Client) Get(ctx context.Context, endpoint string, opts ...Option) (*Res
 	clear := c.initOpts(opts...)
 	defer clear()
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.baseUrl+endpoint, bytes.NewBuffer(nil))
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.baseUrl+endpoint, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -108,6 +108,45 @@ func (c *Client) Delete(ctx context.Context, endpoint string, opts ...Option) (*
 	defer clear()
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, c.baseUrl+endpoint, bytes.NewBuffer(c.body))
+	if err != nil {
+		return nil, err
+	}
+
+	prepReq := c.prepareReq(req)
+	return c.sendReq(ctx, prepReq)
+}
+
+func (c *Client) Connect(ctx context.Context, endpoint string, opts ...Option) (*Response, error) {
+	clear := c.initOpts(opts...)
+	defer clear()
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodConnect, c.baseUrl+endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	prepReq := c.prepareReq(req)
+	return c.sendReq(ctx, prepReq)
+}
+
+func (c *Client) Options(ctx context.Context, endpoint string, opts ...Option) (*Response, error) {
+	clear := c.initOpts(opts...)
+	defer clear()
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodOptions, c.baseUrl+endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	prepReq := c.prepareReq(req)
+	return c.sendReq(ctx, prepReq)
+}
+
+func (c *Client) Trace(ctx context.Context, endpoint string, opts ...Option) (*Response, error) {
+	clear := c.initOpts(opts...)
+	defer clear()
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodTrace, c.baseUrl+endpoint, nil)
 	if err != nil {
 		return nil, err
 	}
