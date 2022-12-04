@@ -1,7 +1,7 @@
 
 <p align="center">
   <a href="https://github.com/bozd4g/go-http-client">
-    <img alt="go-http-client" src="https://raw.githubusercontent.com/bozd4g/go-http-client/master/assets/github/logo.png" width="500">
+    <img alt="go-http-client" src="https://raw.githubusercontent.com/bozd4g/go-http-client/master/assets/banner.png" width="500">
   </a>
 </p>
 
