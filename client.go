@@ -10,14 +10,14 @@ import (
 type (
 	// Client is a struct who has BaseUrl property
 	Client struct {
-		baseUrl string
-		headers map[string]Header
-		query   map[string]string
-		body    []byte
-		timeout time.Duration
+		baseUrl    string
+		httpClient *http.Client
 
-		httpClient  *http.Client
-		defaultOpts []ClientOption
+		headers   map[string]Header
+		query     map[string]string
+		body      []byte
+		transport *http.Transport
+		timeout   time.Duration
 	}
 
 	// Clienter is a interface who calls the methods

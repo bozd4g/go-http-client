@@ -2,6 +2,7 @@ package gohttpclient
 
 import (
 	"context"
+	"net/http"
 	"testing"
 	"time"
 
@@ -19,6 +20,20 @@ func TestOption(t *testing.T) {
 
 func (s *TestOptionSuite) SetupSuite() {
 	s.ctx = context.Background()
+}
+
+func (s *TestOptionSuite) Test_WithCustomHttpClient_ShouldRunSuccesfully() {
+	// Arrange
+	baseUrl := "http://localhost:8080"
+	httpClient := &http.Client{}
+	client := New(baseUrl)
+
+	// Act
+	WithCustomHttpClient(httpClient)(client)
+
+	// Assert
+	s.Assert().NotNil(client.httpClient)
+	s.Assert().Equal(httpClient, client.httpClient)
 }
 
 func (s *TestOptionSuite) Test_WithDefaultHeaders_ShouldRunSuccesfully() {

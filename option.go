@@ -1,11 +1,20 @@
 package gohttpclient
 
-import "time"
+import (
+	"net/http"
+	"time"
+)
 
 type (
 	Option       func(c *Client)
 	ClientOption Option
 )
+
+func WithCustomHttpClient(client *http.Client) ClientOption {
+	return func(c *Client) {
+		c.httpClient = client
+	}
+}
 
 func WithDefaultHeaders() ClientOption {
 	return func(c *Client) {
