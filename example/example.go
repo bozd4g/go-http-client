@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	gohttpclient "github.com/bozd4g/go-http-client"
+	ghc "github.com/bozd4g/go-http-client"
 )
 
 type Post struct {
@@ -16,15 +16,15 @@ type Post struct {
 func main() {
 	ctx := context.Background()
 
-	opts := []gohttpclient.ClientOption{
-		gohttpclient.WithDefaultHeaders(),
-		gohttpclient.WithTimeout(time.Second * 3),
+	opts := []ghc.ClientOption{
+		ghc.WithDefaultHeaders(),
+		ghc.WithTimeout(time.Second * 3),
 	}
-	client := gohttpclient.New("https://jsonplaceholder.typicode.com", opts...)
+	client := ghc.New("https://jsonplaceholder.typicode.com", opts...)
 
-	reqOpts := []gohttpclient.Option{
-		gohttpclient.WithHeader("x-useragent", "go-http-client"),
-		gohttpclient.WithHeader("x-correlationid", "123456789"),
+	reqOpts := []ghc.Option{
+		ghc.WithHeader("x-useragent", "go-http-client"),
+		ghc.WithHeader("x-correlationid", "123456789"),
 	}
 	response, err := client.Get(ctx, "/posts/1", reqOpts...)
 	if err != nil {
