@@ -2,7 +2,6 @@ package gohttpclient
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -18,13 +17,7 @@ func (r *Response) Body() []byte {
 }
 
 func (r *Response) Unmarshal(v any) error {
-	defer r.res.Body.Close()
-	body, err := ioutil.ReadAll(r.res.Body)
-	if err != nil {
-		return err
-	}
-
-	return json.Unmarshal(body, &v)
+	return json.Unmarshal(r.body, &v)
 }
 
 func (r *Response) Status() int {
