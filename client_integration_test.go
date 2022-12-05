@@ -20,10 +20,7 @@ func TestIntegrationSuite(t *testing.T) {
 	suite.Run(t, new(IntegrationSuite))
 }
 
-func (s *IntegrationSuite) SetupSuite() {
-	// read large file from test folder
-
-}
+func (s *IntegrationSuite) SetupSuite() {}
 
 func (s *IntegrationSuite) Test_Get_WhenServerReturnsBigFile_ShouldRunSuccesfully() {
 	// Arrange
