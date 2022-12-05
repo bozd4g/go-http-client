@@ -45,34 +45,13 @@ func (s *TestResponseSuite) Test_Body_ShouldRunSuccesfully() {
 
 	// Act
 	resp := Response{
-		&http.Response{
+		res: &http.Response{
 			Body: ioutil.NopCloser(bytes.NewBuffer(body)),
 		},
 	}
 
 	// Assert
-	responseBody, err := resp.Body()
-	s.NoError(err)
-	s.Equal(body, responseBody)
-}
-
-func (s *TestResponseSuite) Test_Body_ShouldReturnError() {
-	// Arrange
-	mockReadCloser := mockReadCloser{}
-	mockReadCloser.On("Read", mock.AnythingOfType("[]uint8")).Return(0, fmt.Errorf("error reading"))
-	mockReadCloser.On("Close").Return(fmt.Errorf("error closing"))
-
-	resp := Response{
-		&http.Response{
-			Body: &mockReadCloser,
-		},
-	}
-
-	// Act
-	_, err := resp.Body()
-
-	// Assert
-	s.Error(err)
+	s.Equal(body, resp.Body())
 }
 
 func (s *TestResponseSuite) Test_Unmarshal_ShouldRunSuccesfully() {
@@ -81,7 +60,7 @@ func (s *TestResponseSuite) Test_Unmarshal_ShouldRunSuccesfully() {
 
 	// Act
 	resp := Response{
-		&http.Response{
+		res: &http.Response{
 			Body: ioutil.NopCloser(bytes.NewBuffer(body)),
 		},
 	}
@@ -100,7 +79,7 @@ func (s *TestResponseSuite) Test_Unmarshal_WhenBodyIsWrong_ShouldReturnError() {
 	mockReadCloser.On("Close").Return(fmt.Errorf("error closing"))
 
 	resp := Response{
-		&http.Response{
+		res: &http.Response{
 			Body: &mockReadCloser,
 		},
 	}
@@ -119,7 +98,7 @@ func (s *TestResponseSuite) Test_Unmarshal_WhenUnMarshalReturnsError_ShouldRetur
 
 	// Act
 	resp := Response{
-		&http.Response{
+		res: &http.Response{
 			Body: ioutil.NopCloser(bytes.NewBuffer(body)),
 		},
 	}
@@ -133,7 +112,7 @@ func (s *TestResponseSuite) Test_Unmarshal_WhenUnMarshalReturnsError_ShouldRetur
 func (s *TestResponseSuite) Test_Status_ShouldRunSuccesfully() {
 	// Arrange
 	resp := Response{
-		&http.Response{
+		res: &http.Response{
 			StatusCode: 200,
 		},
 	}
@@ -148,7 +127,7 @@ func (s *TestResponseSuite) Test_Status_ShouldRunSuccesfully() {
 func (s *TestResponseSuite) Test_Header_ShouldRunSuccesfully() {
 	// Arrange
 	resp := Response{
-		&http.Response{
+		res: &http.Response{
 			Header: http.Header{
 				"Content-Type": []string{"application/json"},
 			},
@@ -156,7 +135,7 @@ func (s *TestResponseSuite) Test_Header_ShouldRunSuccesfully() {
 	}
 
 	// Act
-	header := resp.Header()
+	header := resp.Headers()
 
 	// Assert
 	s.Equal("application/json", header["Content-Type"][0])
@@ -165,7 +144,7 @@ func (s *TestResponseSuite) Test_Header_ShouldRunSuccesfully() {
 func (s *TestResponseSuite) Test_Cookies_ShouldRunSuccesfully() {
 	// Arrange
 	resp := Response{
-		&http.Response{
+		res: &http.Response{
 			Header: http.Header{
 				"Set-Cookie": []string{"test=1"},
 			},
@@ -182,7 +161,7 @@ func (s *TestResponseSuite) Test_Cookies_ShouldRunSuccesfully() {
 func (s *TestResponseSuite) Test_Ok_ShouldRunSuccesfully() {
 	// Arrange
 	resp := Response{
-		&http.Response{
+		res: &http.Response{
 			StatusCode: 200,
 		},
 	}
@@ -197,7 +176,7 @@ func (s *TestResponseSuite) Test_Ok_ShouldRunSuccesfully() {
 func (s *TestResponseSuite) Test_Get_ShouldRunSuccesfully() {
 	// Arrange
 	resp := Response{
-		&http.Response{
+		res: &http.Response{
 			Header: http.Header{
 				"Content-Type": []string{"application/json"},
 			},
@@ -208,5 +187,5 @@ func (s *TestResponseSuite) Test_Get_ShouldRunSuccesfully() {
 	res := resp.Get()
 
 	// Assert
-	s.Equal(resp.httpResponse, res)
+	s.Equal(resp.res, res)
 }
