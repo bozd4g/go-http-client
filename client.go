@@ -3,8 +3,11 @@ package gohttpclient
 import (
 	"bytes"
 	"context"
+	"io/ioutil"
 	"net/http"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 type (
@@ -206,8 +209,14 @@ func (c *Client) sendReq(ctx context.Context, req *http.Request) (*Response, err
 
 	res, err := c.httpClient.Do(req.WithContext(reqCtx))
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to send request")
 	}
 
-	return &Response{httpResponse: res}, nil
+	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to read response body")
+	}
+
+	return &Response{res, body}, nil
 }
