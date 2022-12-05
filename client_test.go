@@ -158,9 +158,72 @@ func (s *TestClientSuite) Test_Request_WhenDoReturnsAnError_ShouldReturnError() 
 	}
 }
 
+func (s *TestClientSuite) Test_Request_WhenBodyReturnsError_ShouldReturnError() {
+	// Arrange
+	svc := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Length", "1")
+		w.Write(nil)
+	}))
+	defer svc.Close()
+
+	client := New(svc.URL)
+	requests := []TestMethod{
+		{
+			name:    "GET",
+			baseUrl: svc.URL,
+			method:  client.Get,
+		},
+		{
+			name:    "POST",
+			baseUrl: svc.URL,
+			method:  client.Post,
+		},
+		{
+			name:    "PUT",
+			baseUrl: svc.URL,
+			method:  client.Put,
+		},
+		{
+			name:    "PATCH",
+			baseUrl: svc.URL,
+			method:  client.Patch,
+		},
+		{
+			name:    "DELETE",
+			baseUrl: svc.URL,
+			method:  client.Delete,
+		},
+		{
+			name:    "CONNECT",
+			baseUrl: svc.URL,
+			method:  client.Connect,
+		},
+		{
+			name:    "OPTIONS",
+			baseUrl: svc.URL,
+			method:  client.Options,
+		},
+		{
+			name:    "TRACE",
+			baseUrl: svc.URL,
+			method:  client.Trace,
+		},
+	}
+
+	for _, req := range requests {
+		s.Suite.Run(req.name, func() {
+			// Act
+			response, err := req.method(s.ctx, "")
+
+			// Assert
+			s.Nil(response)
+			s.Error(err)
+		})
+	}
+}
+
 func (s *TestClientSuite) Test_Request_ShouldRunSuccesfully() {
 	// Arrange
-	// init test server
 	svc := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}))

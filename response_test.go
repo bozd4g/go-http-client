@@ -42,13 +42,12 @@ func (s *TestResponseSuite) SetupSuite() {
 func (s *TestResponseSuite) Test_Body_ShouldRunSuccesfully() {
 	// Arrange
 	body := []byte("test")
+	res := &http.Response{
+		Body: ioutil.NopCloser(bytes.NewBuffer(body)),
+	}
 
 	// Act
-	resp := Response{
-		res: &http.Response{
-			Body: ioutil.NopCloser(bytes.NewBuffer(body)),
-		},
-	}
+	resp := Response{res, body}
 
 	// Assert
 	s.Equal(body, resp.Body())
