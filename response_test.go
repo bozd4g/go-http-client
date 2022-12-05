@@ -3,28 +3,12 @@ package gohttpclient
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"testing"
 
-	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 )
-
-type mockReadCloser struct {
-	mock.Mock
-}
-
-func (m *mockReadCloser) Read(p []byte) (n int, err error) {
-	args := m.Called(p)
-	return args.Int(0), args.Error(1)
-}
-
-func (m *mockReadCloser) Close() error {
-	args := m.Called()
-	return args.Error(0)
-}
 
 type TestResponseSuite struct {
 	suite.Suite
@@ -56,13 +40,10 @@ func (s *TestResponseSuite) Test_Body_ShouldRunSuccesfully() {
 func (s *TestResponseSuite) Test_Unmarshal_ShouldRunSuccesfully() {
 	// Arrange
 	body := []byte(`{"name":"test"}`)
+	res := &http.Response{}
 
 	// Act
-	resp := Response{
-		res: &http.Response{
-			Body: ioutil.NopCloser(bytes.NewBuffer(body)),
-		},
-	}
+	resp := Response{res, body}
 
 	// Assert
 	var response map[string]interface{}
@@ -73,14 +54,8 @@ func (s *TestResponseSuite) Test_Unmarshal_ShouldRunSuccesfully() {
 
 func (s *TestResponseSuite) Test_Unmarshal_WhenBodyIsWrong_ShouldReturnError() {
 	// Arrange
-	mockReadCloser := mockReadCloser{}
-	mockReadCloser.On("Read", mock.AnythingOfType("[]uint8")).Return(0, fmt.Errorf("error reading"))
-	mockReadCloser.On("Close").Return(fmt.Errorf("error closing"))
-
 	resp := Response{
-		res: &http.Response{
-			Body: &mockReadCloser,
-		},
+		body: nil,
 	}
 
 	// Act
@@ -94,13 +69,10 @@ func (s *TestResponseSuite) Test_Unmarshal_WhenBodyIsWrong_ShouldReturnError() {
 func (s *TestResponseSuite) Test_Unmarshal_WhenUnMarshalReturnsError_ShouldReturnError() {
 	// Arrange
 	body := []byte(`{"name":"test"`)
+	res := &http.Response{}
 
 	// Act
-	resp := Response{
-		res: &http.Response{
-			Body: ioutil.NopCloser(bytes.NewBuffer(body)),
-		},
-	}
+	resp := Response{res, body}
 
 	// Assert
 	var response map[string]interface{}
