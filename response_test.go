@@ -40,13 +40,10 @@ func (s *TestResponseSuite) Test_Body_ShouldRunSuccesfully() {
 func (s *TestResponseSuite) Test_Unmarshal_ShouldRunSuccesfully() {
 	// Arrange
 	body := []byte(`{"name":"test"}`)
+	res := &http.Response{}
 
 	// Act
-	resp := Response{
-		res: &http.Response{
-			Body: ioutil.NopCloser(bytes.NewBuffer(body)),
-		},
-	}
+	resp := Response{res, body}
 
 	// Assert
 	var response map[string]interface{}
