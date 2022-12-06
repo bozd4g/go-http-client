@@ -31,7 +31,6 @@ func (s *IntegrationSuite) Test_Get_WhenServerReturnsBigFile_ShouldRunSuccesfull
 
 	ctx := context.Background()
 
-	// read large file from test folder
 	testSvc := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		bigArr := make([]Post, 0)
 		for i := 0; i < 100000; i++ {
@@ -44,7 +43,6 @@ func (s *IntegrationSuite) Test_Get_WhenServerReturnsBigFile_ShouldRunSuccesfull
 			return
 		}
 
-		// write cookie
 		http.SetCookie(w, &http.Cookie{Name: "test", Value: "test"})
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
